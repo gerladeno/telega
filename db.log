@@ -1,0 +1,24 @@
+Database exists, assume schema does, too.
+Message with ID 19891 created
+Message with ID 19892 created
+Message with ID 19893 created
+Message with ID 19894 created
+Message with ID 19895 created
+Message with ID 19896 created
+DB not found
+Creating schema...
+Schema created with file message_db/create_schema.sql
+Insert chat successful
+Insert monitored_chat successful
+Message with ID 19897 created
+Message with ID 19897 modified
+Message with ID 19898 created
+Message with ID 19899 created
+Message with ID 19896 not found, thus it was not modified
+Message with ID 25353 created
+Message with ID 19900 created
+Message with ID 19901 created
+Database exists, assume schema does, too.
+Message with ID 19902 created
+Message with ID 19903 created
+Database exists, assume schema does, too.
