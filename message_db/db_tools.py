@@ -119,7 +119,7 @@ def modify_message(message):
         flag = bool(c.fetchall())
         if flag:
             connection.execute(
-                'update message set id = ?, version = ?, user_id = ?, act_date = ?, '
+                'update message set id = ?, version = ?, user_id = ?, act_date = ?, ' +
                 'create_date = ?, chat_id = ?, state = ?, content = ?'
                 ,
                 message)

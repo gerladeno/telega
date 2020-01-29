@@ -9,7 +9,7 @@ create table message(
     user_id     integer,
     act_date    date not null,
     create_date date not null,
-    chat_id     integer not null,
+    chat_id     integer,
     state       integer,
     content     text,
     foreign key (chat_id) references chat(id),

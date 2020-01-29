@@ -2,14 +2,12 @@ from telethon import TelegramClient, sync, connection, events
 from datetime import datetime
 import message_db.db_tools
 import my_objects
-import os
 import configparser
-import json
 
 config = configparser.ConfigParser()
 config.read("config.ini")
 
-api_id   = config['Telegram']['api_id']
+api_id = config['Telegram']['api_id']
 api_hash = config['Telegram']['api_hash']
 username = config['Telegram']['username']
 
