@@ -6,3 +6,4 @@ __pycache__
 /.git
 config.ini
 *.session
+/.vscode
