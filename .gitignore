@@ -1,5 +1,6 @@
-*.log
-*.db
+db.log
+schema.db
 *.session
 /.idea
 __pycache__
+/.git
