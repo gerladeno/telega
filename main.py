@@ -2,14 +2,21 @@ from telethon import TelegramClient, sync, connection, events
 from datetime import datetime
 import message_db.db_tools
 import my_objects
+import os
+import configparser
+import json
 
-api_id = 1033718
-api_hash = '4752738f1f604ad5d1878ce1cd2de907'
+config = configparser.ConfigParser()
+config.read("config.ini")
+
+api_id   = config['Telegram']['api_id']
+api_hash = config['Telegram']['api_hash']
+username = config['Telegram']['username']
 
 client = TelegramClient(
     'Testing MyTCL', api_id, api_hash,
     connection=connection.ConnectionTcpMTProxyRandomizedIntermediate,
-    proxy=('proxy.digitalresistance.dog', 443, 'd41d8cd98f00b204e9800998ecf8427e')
+    proxy=('russia-dd.proxy.digitalresistance.dog', 443, 'ddd41d8cd98f00b204e9800998ecf8427e')
 )
 
 chat_names = ('Это Куэльпорр детка!', 'Зип Зяп и Зюп', 'RT на русском')

@@ -2,7 +2,7 @@ log = []
 log_file = 'db.log'
 
 
-async def db_log(text):
+def db_log(text):
     f = open(log_file, 'a')
     f.write(text + "\n")
     f.flush()
@@ -11,7 +11,7 @@ async def db_log(text):
     print(log)
 
 
-async def logic_log(text):
+def logic_log(text):
     f = open(log_file, 'a')
     f.write(text + "\n")
     f.flush()
