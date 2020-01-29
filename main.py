@@ -12,7 +12,7 @@ api_hash = config['Telegram']['api_hash']
 username = config['Telegram']['username']
 
 client = TelegramClient(
-    'Testing MyTCL', api_id, api_hash,
+    username, api_id, api_hash,
     connection=connection.ConnectionTcpMTProxyRandomizedIntermediate,
     proxy=('russia-dd.proxy.digitalresistance.dog', 443, 'ddd41d8cd98f00b204e9800998ecf8427e')
 )
