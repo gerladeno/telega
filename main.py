@@ -28,6 +28,7 @@ async def new_message(event):
     message_id = str(message['id'])
     message_date = message['date'].strftime("%Y-%m-%d %H:%M:%S")
     chat_id = event.message.chat_id
+    print("new_message", message_text, user_id, message_id)
     msg = my_objects.Message([message_id, 0, user_id, message_date, message_date, chat_id, 0, message_text])
     all_messages.add(msg)
 
@@ -40,6 +41,8 @@ async def message_edited(event):
     message_id = str(message['id'])
     message_date = message['date']
     chat_id = event.message.chat_id
+    print("edited", message_text, user_id, message_id)
+
     msg = my_objects.Message([message_id, 0, user_id, message_date, message_date, chat_id, 1, message_text])
     all_messages.modify(msg)
 
@@ -51,6 +54,7 @@ async def message_deleted(event):
     message_id = str(event.deleted_id)
     message_date = datetime.now()
     chat_id = ''
+    print("delete", message_text, user_id, message_id)
     if all_messages.find(message_id):
         msg = my_objects.Message([message_id, 0, user_id, message_date, message_date, chat_id, 2, message_text])
         all_messages.delete(msg)
