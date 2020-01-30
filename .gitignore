@@ -5,3 +5,5 @@ schema.db
 __pycache__
 /.git
 config.ini
+*.session
+/.vscode
