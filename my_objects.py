@@ -79,3 +79,8 @@ class Messages:
         message.state = 2
         self.messages.append(message)
         message_db.db_tools.new_message(message)
+
+
+class MonitoredChats:
+    def __init__(self):
+        self.chats = message_db.db_tools.load_monitored_chats()

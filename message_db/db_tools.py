@@ -153,10 +153,10 @@ def load_chats():
     return res
 
 
-# def run_offline():
-#     all_messages = my_objects.Messages()
-#     chats = load_chats()
-#
-#     pass
-#
-# run_offline()
+def load_monitored_chats():
+    with sqlite3.connect(db_filename) as connection:
+        c = connection.cursor()
+        c.execute('select * from monitored_chat')
+        res = c.fetchall()
+    connection.close()
+    return res

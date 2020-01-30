@@ -67,5 +67,6 @@ for chat in client.iter_dialogs():
 # Init schema and get messages
 message_db.db_tools.init(chats, chat_names)
 all_messages = my_objects.Messages()
+monitors = my_objects.MonitoredChats()
 
 client.run_until_disconnected()
