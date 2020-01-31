@@ -72,4 +72,5 @@ for chat in client.iter_dialogs():
 message_db.db_tools.init(chats, chat_names)
 all_messages = my_objects.Messages()
 
+#input()
 client.run_until_disconnected()
