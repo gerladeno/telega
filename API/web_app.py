@@ -9,6 +9,7 @@ Init()
 app = Flask(__name__)
 app.config["SECRET_KEY"] = "thisissecretkey"
 
+
 def token_required(f):
     @wraps(f)
     def decorated(*args, **kwag):
@@ -18,17 +19,19 @@ def token_required(f):
         token = request.headers["Bearer"]
         try:
             data = jwt.decode(token, app.config["SECRET_KEY"])
+            user = CUser.get_by_id(data['user_id'])
         except:
             return jsonify({'message': 'Token is invalid'}), 401
 
-        return f(*args, **kwag)
+        return f(user, *args, **kwag)
 
     return decorated
 
+
 @app.route('/say')
 @token_required
-def index():
-    return "<H1>Header</H1>"
+def index(user):
+    return f"<H1>Hi {user.username}!</H1>"
 
 
 @app.route('/create', methods=['POST'])
@@ -57,14 +60,16 @@ def login():
         return jsonify({'message': 'Invalid fields'}), 401
 
     user = CUser.get(
-        CUser.username == data['username'] and CUser.password == data['password'])
+        (CUser.username == data['username']) &
+        (CUser.password == data['password'])
+    )
 
     if (user is None):
         return jsonify({'message': 'Invalid pair login:password'})
 
     token = jwt.encode(
         {
-            'user': user.username,
+            'user_id': user.rowid,
             'exp': datetime.datetime.utcnow() + datetime.timedelta(days=365)
         },
         app.config['SECRET_KEY']
