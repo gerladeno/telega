@@ -3,8 +3,6 @@
 <head>
     <!-- Mobile Specific Meta -->
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <!-- Favicon-->
-    <link rel="shortcut icon" href="img/fav.png">
     <!-- Author Meta -->
     <meta name="author" content="CodePixar">
     <!-- Meta Description -->
@@ -47,7 +45,7 @@
                         <div class="desc text-center mt-30">
                             <h4 class="text-white">List of chats here</h4>
                             {% for chat in monitored %}
-                                <a href="#5" class="primary-btn"><span>{{chat}}</span></a>
+                            <a href="#5" class="primary-btn"><span>{{chat}}</span></a>
                             {% endfor %}
                         </div>
                     </div>
@@ -57,10 +55,10 @@
                         <div class="desc text-center mt-30">
                             <h4 class="text-white">List of messages</h4>
                             {% for message in messages %}
-                                {% if message.chat_id == -1001036362176 %}
-                                    <p class="text-white">{{message.create_date}}: {{message.content}}</p>
-                                    <a href="#" class="primary-btn"><span>View message history</span></a>
-                                {% endif %}
+                            {% if message.chat_id == -1001036362176 %}
+                            <p class="text-white">{{message.create_date}}: {{message.content}}</p>
+                            <a href="#" class="primary-btn"><span>View message history</span></a>
+                            {% endif %}
                             {% endfor %}
                         </div>
                     </div>
@@ -70,9 +68,11 @@
                         <div class="desc text-center mt-30">
                             <h4 class="text-white">Message history</h4>
                             {% for message in messages %}
-                                {% if message.chat_id == -1001036362176 and message.id == 25470 %}
-                                    <p class="text-white">{{message.act_date}}. Version is {{message.version}}, state is {{message.state}}. Content of this version is in the next line. <br>{{message.content}}</p>
-                                {% endif %}
+                            {% if message.chat_id == -1001036362176 and message.id == 25470 %}
+                            <p class="text-white">{{message.act_date}}. Version is {{message.version}}, state is
+                                {{message.state}}. Content of this version is in the next line. <br>{{message.content}}
+                            </p>
+                            {% endif %}
                             {% endfor %}
                         </div>
                     </div>

@@ -6,15 +6,20 @@ import configparser
 from flask import Flask, render_template
 from jinja2 import Template
 import datetime
+from threading import Thread
 
-app = Flask(__name__)
+app = Flask(__name__, template_folder="./Front/test/", static_folder="./Front/test/")
 app.config["SECRET_KEY"] = "thisissecretkey"
+web_ui = Thread(target=app.run)
 
 
 @app.route('/')
 def crutch():
-    template_context = dict(name=username, chats=chats, messages=all_messages, monitored=chat_names)
-    return render_template('Front/test/index.html', **template_context)
+    monitors = my_objects.MonitoredChats()
+    print(type(monitors))
+    all_messages = my_objects.Messages()
+    template_context = dict(name=username, chats=chats, messages=all_messages.messages, monitored=monitors.chats)
+    return render_template('index.html', **template_context)
 
 
 config = configparser.ConfigParser()
@@ -87,5 +92,7 @@ all_messages = my_objects.Messages()
 monitors = my_objects.MonitoredChats()
 
 # input()
-app.run(debug=True)
+web_ui.start()
 client.run_until_disconnected()
+
+web_ui.join()
