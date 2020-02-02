@@ -1,8 +1,21 @@
-from telethon import TelegramClient, sync, connection, events
+from telethon import TelegramClient, connection, events
 from datetime import datetime
 import message_db.db_tools
 import my_objects
 import configparser
+from flask import Flask, render_template
+from jinja2 import Template
+import datetime
+
+app = Flask(__name__)
+app.config["SECRET_KEY"] = "thisissecretkey"
+
+
+@app.route('/')
+def crutch():
+    template_context = dict(name=username, chats=chats, messages=all_messages, monitored=chat_names)
+    return render_template('Front/test/index.html', **template_context)
+
 
 config = configparser.ConfigParser()
 config.read("config.ini")
@@ -14,7 +27,7 @@ username = config['Telegram']['username']
 client = TelegramClient(
     username, api_id, api_hash,
     connection=connection.ConnectionTcpMTProxyRandomizedIntermediate,
-    proxy=('russia-dd.proxy.digitalresistance.dog', 443, 'ddd41d8cd98f00b204e9800998ecf8427e')
+    proxy=('Unity-Proxy.dynu.com', 80, 'ddf4359a9b325ff1d1e5084df0e0f7537b')
 )
 
 chat_names = ('Это Куэльпорр детка!', 'Зип Зяп и Зюп', 'RT на русском')
@@ -72,5 +85,6 @@ for chat in client.iter_dialogs():
 message_db.db_tools.init(chats, chat_names)
 all_messages = my_objects.Messages()
 
-#input()
+# input()
+app.run(debug=True)
 client.run_until_disconnected()
