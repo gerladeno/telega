@@ -4,7 +4,6 @@ import message_db.db_tools
 import my_objects
 import configparser
 from flask import Flask, render_template
-from jinja2 import Template
 import datetime
 from threading import Thread
 
@@ -16,9 +15,20 @@ web_ui = Thread(target=app.run)
 @app.route('/')
 def crutch():
     monitors = my_objects.MonitoredChats()
-    print(type(monitors))
     all_messages = my_objects.Messages()
-    template_context = dict(name=username, chats=chats, messages=all_messages.messages, monitored=monitors.chats)
+    chat_messages = []
+    message_versions = []
+    # Temp hardcode
+    monitored_chat_id = -1001036362176
+    viewed_message_id = 25470
+    for message in all_messages.messages:
+        if message.chat_id == monitored_chat_id:
+            chat_messages.append(message)
+    for message in chat_messages:
+        if message.id == viewed_message_id:
+            message_versions.append(message)
+    template_context = dict(name=username, chats=chats, chat_messages=chat_messages, message_versions=message_versions,
+                            monitored=monitors.chats)
     return render_template('index.html', **template_context)
 
 

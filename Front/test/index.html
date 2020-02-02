@@ -54,11 +54,9 @@
                     <div class="single-feature">
                         <div class="desc text-center mt-30">
                             <h4 class="text-white">List of messages</h4>
-                            {% for message in messages %}
-                            {% if message.chat_id == -1001036362176 %}
+                            {% for message in chat_messages %}
                             <p class="text-white">{{message.create_date}}: {{message.content}}</p>
                             <a href="#" class="primary-btn"><span>View message history</span></a>
-                            {% endif %}
                             {% endfor %}
                         </div>
                     </div>
@@ -67,12 +65,10 @@
                     <div class="single-feature">
                         <div class="desc text-center mt-30">
                             <h4 class="text-white">Message history</h4>
-                            {% for message in messages %}
-                            {% if message.chat_id == -1001036362176 and message.id == 25470 %}
+                            {% for message in message_versions %}
                             <p class="text-white">{{message.act_date}}. Version is {{message.version}}, state is
                                 {{message.state}}. Content of this version is in the next line. <br>{{message.content}}
                             </p>
-                            {% endif %}
                             {% endfor %}
                         </div>
                     </div>
