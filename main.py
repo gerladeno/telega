@@ -3,34 +3,13 @@ from datetime import datetime
 import message_db.db_tools
 import my_objects
 import configparser
-from flask import Flask, render_template
+from flask import Flask, render_template, request
 import datetime
 from threading import Thread
 
 app = Flask(__name__, template_folder="./Front/test/", static_folder="./Front/test/")
 app.config["SECRET_KEY"] = "thisissecretkey"
 web_ui = Thread(target=app.run)
-
-
-@app.route('/')
-def crutch():
-    monitors = my_objects.MonitoredChats()
-    all_messages = my_objects.Messages()
-    chat_messages = []
-    message_versions = []
-    # Temp hardcode
-    monitored_chat_id = -1001036362176
-    viewed_message_id = 25470
-    for message in all_messages.messages:
-        if message.chat_id == monitored_chat_id:
-            chat_messages.append(message)
-    for message in chat_messages:
-        if message.id == viewed_message_id:
-            message_versions.append(message)
-    template_context = dict(name=username, chats=chats, chat_messages=chat_messages, message_versions=message_versions,
-                            monitored=monitors.chats)
-    return render_template('index.html', **template_context)
-
 
 config = configparser.ConfigParser()
 config.read("config.ini")
@@ -45,7 +24,29 @@ client = TelegramClient(
     proxy=('Unity-Proxy.dynu.com', 80, 'ddf4359a9b325ff1d1e5084df0e0f7537b')
 )
 
+listener_loop = Thread(target=client.run_until_disconnected)
+
 chat_names = ('Это Куэльпорр детка!', 'Зип Зяп и Зюп', 'RT на русском')
+
+
+@app.route('/')
+def crutch():
+    monitored_chat_id = request.args.get('chat', default=0, type=int)
+    viewed_message_id = request.args.get('msg', default=0, type=int)
+    global monitors, all_messages
+    all_messages = my_objects.Messages()
+    monitors = my_objects.MonitoredChats()
+    chat_messages = []
+    message_versions = []
+    for message in all_messages.messages:
+        if message.chat_id == monitored_chat_id and message.version == 0:
+            chat_messages.append(message)
+    for message in all_messages.messages:
+        if message.id == viewed_message_id:
+            message_versions.append(message)
+    template_context = dict(name=username, chats=chats, chat_messages=chat_messages, message_versions=message_versions,
+                            monitored=monitors.chats)
+    return render_template('index.html', **template_context)
 
 
 @client.on(events.NewMessage(chats=chat_names))
@@ -103,6 +104,7 @@ monitors = my_objects.MonitoredChats()
 
 # input()
 web_ui.start()
-client.run_until_disconnected()
+listener_loop.start()
 
 web_ui.join()
+listener_loop.join()

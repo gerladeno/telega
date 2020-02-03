@@ -45,7 +45,7 @@
                         <div class="desc text-center mt-30">
                             <h4 class="text-white">List of chats here</h4>
                             {% for chat in monitored %}
-                            <a href="#5" class="primary-btn"><span>{{chat}}</span></a>
+                            <a href="?chat={{chat[0]}}" class="primary-btn"><span>{{chat[1]}}</span></a>
                             {% endfor %}
                         </div>
                     </div>
@@ -56,7 +56,9 @@
                             <h4 class="text-white">List of messages</h4>
                             {% for message in chat_messages %}
                             <p class="text-white">{{message.create_date}}: {{message.content}}</p>
-                            <a href="#" class="primary-btn"><span>View message history</span></a>
+                            {% if message.state != 0 %}
+                            <a href="?chat={{message.chat_id}}&msg={{message.id}}" class="primary-btn"><span>View message history</span></a>
+                            {% endif %}
                             {% endfor %}
                         </div>
                     </div>
