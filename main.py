@@ -1,16 +1,18 @@
 from telethon import TelegramClient, connection, events
 from datetime import datetime
-import message_db.db_tools
 import my_objects
 import configparser
 from flask import Flask, render_template, request
 import datetime
 from threading import Thread
+from playhouse.sqlite_ext import SqliteExtDatabase
 
+# Init
+# Flask
 app = Flask(__name__, template_folder="./Front/test/", static_folder="./Front/test/")
 app.config["SECRET_KEY"] = "thisissecretkey"
-web_ui = Thread(target=app.run)
 
+# Connect
 config = configparser.ConfigParser()
 config.read("config.ini")
 
@@ -24,18 +26,28 @@ client = TelegramClient(
     proxy=('Unity-Proxy.dynu.com', 80, 'ddf4359a9b325ff1d1e5084df0e0f7537b')
 )
 
+# DB
+db = SqliteExtDatabase('peewee.db', pragmas=(
+    ('cache_size', -1024 * 64),  # 64MB page-cache.
+    ('journal_mode', 'wal'),  # Use WAL-mode (you should always use this!).
+    ('foreign_keys', 1),
+    ('c_extensions', True)))  # Enforce foreign-key constraints.
+
+# Threads
+web_ui = Thread(target=app.run)
 listener_loop = Thread(target=client.run_until_disconnected)
 
-chat_names = ('Это Куэльпорр детка!', 'Зип Зяп и Зюп', 'RT на русском')
+# Other
+chat_names = ('Это Куэльпорр детка!', 'Зип Зяп и Зюп', 'RT на русском', 'Наш Ривер Парк')
 
 
+# Generate and display main page
 @app.route('/')
 def crutch():
     monitored_chat_id = request.args.get('chat', default=0, type=int)
     viewed_message_id = request.args.get('msg', default=0, type=int)
     global monitors, all_messages
     all_messages = my_objects.Messages()
-    monitors = my_objects.MonitoredChats()
     chat_messages = []
     message_versions = []
     for message in all_messages.messages:
@@ -49,6 +61,7 @@ def crutch():
     return render_template('index.html', **template_context)
 
 
+# Listeners
 @client.on(events.NewMessage(chats=chat_names))
 async def new_message(event):
     message = event.message.to_dict()
@@ -58,7 +71,7 @@ async def new_message(event):
     message_date = message['date'].strftime("%Y-%m-%d %H:%M:%S")
     chat_id = event.message.chat_id
     print("new_message", message_text, user_id, message_id)
-    msg = my_objects.Message([message_id, 0, user_id, message_date, message_date, chat_id, 0, message_text])
+    msg = my_objects.Message([message_id, 0, user_id, message_date, message_date, chat_id, 0, message_text, None])
     all_messages.add(msg)
 
 
@@ -71,8 +84,7 @@ async def message_edited(event):
     message_date = message['date']
     chat_id = event.message.chat_id
     print("edited", message_text, user_id, message_id)
-
-    msg = my_objects.Message([message_id, 0, user_id, message_date, message_date, chat_id, 1, message_text])
+    msg = my_objects.Message([message_id, 0, user_id, message_date, message_date, chat_id, 1, message_text, None])
     all_messages.modify(msg)
 
 
@@ -84,9 +96,8 @@ async def message_deleted(event):
     message_date = datetime.now()
     chat_id = ''
     print("delete", message_text, user_id, message_id)
-    if all_messages.find(message_id):
-        msg = my_objects.Message([message_id, 0, user_id, message_date, message_date, chat_id, 2, message_text])
-        all_messages.delete(msg)
+    msg = my_objects.Message([message_id, 0, user_id, message_date, message_date, chat_id, 2, message_text, None])
+    all_messages.delete(msg)
 
 
 # if __name__ == "__main__":
@@ -98,9 +109,10 @@ for chat in client.iter_dialogs():
     chats[chat.id] = chat.name
 
 # Init schema and get messages
-message_db.db_tools.init(chats, chat_names)
+my_objects.init()
+all_chats = my_objects.Chats(chats, chat_names)
 all_messages = my_objects.Messages()
-monitors = my_objects.MonitoredChats()
+monitors = all_chats.get_monitored()
 
 # input()
 web_ui.start()
