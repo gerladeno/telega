@@ -1,7 +1,6 @@
 from peewee import *
-#from main import db
+# from main import db
 from playhouse.sqlite_ext import SqliteExtDatabase
-
 
 # DB
 db = SqliteExtDatabase('peewee.db', pragmas=(
@@ -15,6 +14,7 @@ def init():
     with db:
         if not db.table_exists('Chat'):
             db.create_tables([Chat, User, Message])
+        db.connect(True)
 
 
 class BaseModel(Model):
@@ -25,8 +25,11 @@ class BaseModel(Model):
 class Chat(BaseModel):
     id = IntegerField(primary_key=True)
     name = TextField()
-    track = BooleanField
-    title = TextField()
+    track = BooleanField()
+    title = TextField(null=True)
+
+    class Meta:
+        db_table = 'chat'
 
     # def __init__(self, id, name, track=False, title=""):
     #     self.id = id
@@ -41,6 +44,9 @@ class User(BaseModel):
     phone = TextField()
     photo = BlobField(null=True)
 
+    class Meta:
+        db_table = 'user'
+
 
 class Message(BaseModel):
     id = IntegerField(index=True)
@@ -52,6 +58,9 @@ class Message(BaseModel):
     state = IntegerField()
     content = TextField()
     media = BlobField(null=True)
+
+    class Meta:
+        db_table = 'message'
 
     # def __init__(self, id, version=None, user_id=None, act_date=None, create_date=None, chat_id=None, state=None,
     #              content=None, media=None):
@@ -125,7 +134,7 @@ class Chats:
                 self.chats.append(item)
                 item.save()
             else:
-                item = Chat(id=chat, name=chats[chat])
+                item = Chat(id=chat, name=chats[chat], track=False)
                 self.chats.append(item)
                 item.save()
 
