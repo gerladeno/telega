@@ -23,15 +23,9 @@ username = config['Telegram']['username']
 client = TelegramClient(
     username, api_id, api_hash,
     connection=connection.ConnectionTcpMTProxyRandomizedIntermediate,
-    proxy=('Unity-Proxy.dynu.com', 80, 'ddf4359a9b325ff1d1e5084df0e0f7537b')
+    proxy=('proxy.mtproto.co', 443, '11112222333344445555666677778888')
 )
 
-# DB
-db = SqliteExtDatabase('peewee.db', pragmas=(
-    ('cache_size', -1024 * 64),  # 64MB page-cache.
-    ('journal_mode', 'wal'),  # Use WAL-mode (you should always use this!).
-    ('foreign_keys', 1),
-    ('c_extensions', True)))  # Enforce foreign-key constraints.
 
 # Threads
 web_ui = Thread(target=app.run)

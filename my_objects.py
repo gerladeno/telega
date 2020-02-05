@@ -1,5 +1,14 @@
 from peewee import *
-from main import db
+#from main import db
+from playhouse.sqlite_ext import SqliteExtDatabase
+
+
+# DB
+db = SqliteExtDatabase('peewee.db', pragmas=(
+    ('cache_size', -1024 * 64),  # 64MB page-cache.
+    ('journal_mode', 'wal'),  # Use WAL-mode (you should always use this!).
+    ('foreign_keys', 1),
+    ('c_extensions', True)))  # Enforce foreign-key constraints.
 
 
 def init():
@@ -16,10 +25,10 @@ class BaseModel(Model):
 class Chat(BaseModel):
     id = IntegerField(primary_key=True)
     name = TextField()
-    track = BooleanField(default=None)
+    track = BooleanField
     title = TextField()
 
-    def __init__(self, id, name, track=None, title=None):
+    def __init__(self, id, name, track=False, title=""):
         self.id = id
         self.name = name
         self.track = track
@@ -73,7 +82,7 @@ class Message(BaseModel):
         self.version = self.version + 1
         self.save()
 
-    def delete(self):
+    def delete_(self):
         self.state = 2
         self.save()
 
@@ -101,7 +110,7 @@ class Messages:
     def delete(self, message):
         for msg in self.messages:
             if str(msg.id) == str(message.id):
-                msg.delete()
+                msg.delete_()
                 message.chat_id = msg.chat_id
         self.messages.append(message)
         message.save()
@@ -113,9 +122,9 @@ class Chats:
     def __init__(self, chats, monitored):
         for chat in chats:
             if chats[chat] in monitored:
-                Chat(chat, chats[chat], True)
+                self.chats.append(Chat(id=chat, name=chats[chat], track=True))
             else:
-                Chat(chat, chats[chat])
+                self.chats.append(Chat(id=chat, name=chats[chat]))
 
     def get_monitored(self):
         return Chat.select().where(Chat.track is True)
