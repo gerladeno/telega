@@ -105,8 +105,8 @@ for chat in client.iter_dialogs():
 # Init schema and get messages
 my_objects.init()
 all_chats = my_objects.Chats(chats, chat_names)
-all_messages = my_objects.Messages()
 monitors = all_chats.get_monitored()
+all_messages = my_objects.Messages()
 
 # input()
 web_ui.start()
