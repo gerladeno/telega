@@ -26,7 +26,6 @@ client = TelegramClient(
     proxy=('proxy.mtproto.co', 443, '11112222333344445555666677778888')
 )
 
-
 # Threads
 web_ui = Thread(target=app.run)
 listener_loop = Thread(target=client.run_until_disconnected)
@@ -65,7 +64,8 @@ async def new_message(event):
     message_date = message['date'].strftime("%Y-%m-%d %H:%M:%S")
     chat_id = event.message.chat_id
     print("new_message", message_text, user_id, message_id)
-    msg = my_objects.Message([message_id, 0, user_id, message_date, message_date, chat_id, 0, message_text, None])
+    msg = my_objects.Message(id=message_id, version=0, user_id=user_id, act_date=message_date, create_date=message_date,
+                             chat_id=chat_id, state=0, content=message_text, media=None)
     all_messages.add(msg)
 
 
@@ -78,7 +78,8 @@ async def message_edited(event):
     message_date = message['date']
     chat_id = event.message.chat_id
     print("edited", message_text, user_id, message_id)
-    msg = my_objects.Message([message_id, 0, user_id, message_date, message_date, chat_id, 1, message_text, None])
+    msg = my_objects.Message(id=message_id, version=0, user_id=user_id, act_date=message_date, create_date=message_date,
+                             chat_id=chat_id, state=1, content=message_text, media=None)
     all_messages.modify(msg)
 
 
@@ -90,7 +91,8 @@ async def message_deleted(event):
     message_date = datetime.now()
     chat_id = ''
     print("delete", message_text, user_id, message_id)
-    msg = my_objects.Message([message_id, 0, user_id, message_date, message_date, chat_id, 2, message_text, None])
+    msg = my_objects.Message(id=message_id, version=0, user_id=user_id, act_date=message_date, create_date=message_date,
+                             chat_id=chat_id, state=2, content=message_text, media=None)
     all_messages.delete(msg)
 
 

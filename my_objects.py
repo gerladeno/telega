@@ -14,7 +14,6 @@ def init():
     with db:
         if not db.table_exists('Chat'):
             db.create_tables([Chat, User, Message])
-        db.connect(True)
 
 
 class BaseModel(Model):
@@ -23,7 +22,7 @@ class BaseModel(Model):
 
 
 class Chat(BaseModel):
-    id = IntegerField(primary_key=True)
+    id = IntegerField()
     name = TextField()
     track = BooleanField()
     title = TextField(null=True)
@@ -31,15 +30,9 @@ class Chat(BaseModel):
     class Meta:
         db_table = 'chat'
 
-    # def __init__(self, id, name, track=False, title=""):
-    #     self.id = id
-    #     self.name = name
-    #     self.track = track
-    #     self.title = title
-
 
 class User(BaseModel):
-    id = IntegerField(primary_key=True)
+    id = IntegerField()
     username = TextField()
     phone = TextField()
     photo = BlobField(null=True)
@@ -62,30 +55,6 @@ class Message(BaseModel):
     class Meta:
         db_table = 'message'
 
-    # def __init__(self, id, version=None, user_id=None, act_date=None, create_date=None, chat_id=None, state=None,
-    #              content=None, media=None):
-    #     if version is None:
-    #         self.id = id[0]
-    #         self.version = id[1]
-    #         self.user_id = id[2]
-    #         self.act_date = id[3]
-    #         self.create_date = id[4]
-    #         self.chat_id = id[5]
-    #         self.state = id[6]
-    #         self.content = id[7]
-    #         self.media = id[8]
-    #         self.list = id
-    #     else:
-    #         self.id = id
-    #         self.version = version
-    #         self.user_id = user_id
-    #         self.act_date = act_date
-    #         self.create_date = create_date
-    #         self.chat_id = chat_id
-    #         self.state = state
-    #         self.content = content
-    #         self.media = media
-
     def modify(self):
         self.state = 1
         self.version = self.version + 1
@@ -106,14 +75,14 @@ class Messages:
 
     def add(self, message):
         self.messages.append(message)
-        message.save()
+        message.save(force_insert = True)
 
     def modify(self, message):
         for msg in self.messages:
             if str(msg.id) == str(message.id):
                 msg.modify()
         self.messages.append(message)
-        message.save()
+        message.save(force_insert = True)
 
     def delete(self, message):
         for msg in self.messages:
@@ -121,22 +90,21 @@ class Messages:
                 msg.delete_()
                 message.chat_id = msg.chat_id
         self.messages.append(message)
-        message.save()
+        message.save(force_insert = True)
 
 
 class Chats:
     chats = []
 
     def __init__(self, chats, monitored):
+        Chat.delete().execute()
         for chat in chats:
             if chats[chat] in monitored:
-                item = Chat(id=chat, name=chats[chat], track=True)
+                item = Chat.create(id=chat, name=chats[chat], track=True)
                 self.chats.append(item)
-                item.save()
             else:
-                item = Chat(id=chat, name=chats[chat], track=False)
+                item = Chat.create(id=chat, name=chats[chat], track=False)
                 self.chats.append(item)
-                item.save()
 
     def get_monitored(self):
         return Chat.select().where(Chat.track is True)
