@@ -40,17 +40,17 @@ def crutch():
     monitored_chat_id = request.args.get('chat', default=0, type=int)
     viewed_message_id = request.args.get('msg', default=0, type=int)
     global monitors, all_messages
-    all_messages = my_objects.Messages()
+    all_messages = my_objects.Messages.get_all_messages()
     chat_messages = []
     message_versions = []
-    for message in all_messages.messages:
-        if message.chat_id == monitored_chat_id and message.version == 0:
+    for message in all_messages:
+        if message.chat_id_id == monitored_chat_id and message.version == 0:
             chat_messages.append(message)
-    for message in all_messages.messages:
+    for message in all_messages:
         if message.id == viewed_message_id:
             message_versions.append(message)
     template_context = dict(name=username, chats=chats, chat_messages=chat_messages, message_versions=message_versions,
-                            monitored=monitors.chats)
+                            monitored=monitors)
     return render_template('index.html', **template_context)
 
 
@@ -99,6 +99,7 @@ async def message_deleted(event):
 # if __name__ == "__main__":
 
 client.start()
+print('connected')
 # Get chats
 chats = {}
 for chat in client.iter_dialogs():
@@ -108,7 +109,7 @@ for chat in client.iter_dialogs():
 my_objects.init()
 all_chats = my_objects.Chats(chats, chat_names)
 monitors = all_chats.get_monitored()
-all_messages = my_objects.Messages()
+my_objects.Messages()
 
 # input()
 web_ui.start()

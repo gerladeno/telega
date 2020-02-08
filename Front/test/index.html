@@ -45,7 +45,7 @@
                         <div class="desc text-center mt-30">
                             <h4 class="text-white">List of chats here</h4>
                             {% for chat in monitored %}
-                            <a href="?chat={{chat[0]}}" class="primary-btn"><span>{{chat[1]}}</span></a>
+                            <a href="?chat={{chat}}" class="primary-btn"><span>{{monitored[chat]}}</span></a>
                             {% endfor %}
                         </div>
                     </div>
