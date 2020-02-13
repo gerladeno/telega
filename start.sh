@@ -1,3 +1,3 @@
 #!/bin/bash
-cd $LOCATION
+cd $1
 python3 main.py
