@@ -29,7 +29,7 @@ client = TelegramClient(
 )
 
 # Threads
-web_ui = Thread(target=app.run)
+web_ui = Thread(target=app.run, kwargs={'host': '0.0.0.0'})
 listener_loop = Thread(target=client.run_until_disconnected)
 
 
