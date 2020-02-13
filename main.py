@@ -64,7 +64,7 @@ async def new_message(event):
     chat_id = event.message.chat_id
     print("new_message", message_text, user_id, message_id)
     msg = my_objects.Message(id=message_id, version=0, user_id=user_id, act_date=message_date, create_date=message_date,
-                             chat_id=chat_id, state=0, content=message_text, media=None)
+                             chat_id=chat_id, state=0, content=message_text)
     all_messages.add(msg)
 
 
@@ -78,7 +78,7 @@ async def message_edited(event):
     chat_id = event.message.chat_id
     print("edited", message_text, user_id, message_id)
     msg = my_objects.Message(id=message_id, version=0, user_id=user_id, act_date=message_date, create_date=message_date,
-                             chat_id=chat_id, state=1, content=message_text, media=None)
+                             chat_id=chat_id, state=1, content=message_text)
     all_messages.modify(msg)
 
 
@@ -91,7 +91,7 @@ async def message_deleted(event):
     chat_id = ''
     print("delete", message_text, user_id, message_id)
     msg = my_objects.Message(id=message_id, version=0, user_id=user_id, act_date=message_date, create_date=message_date,
-                             chat_id=chat_id, state=2, content=message_text, media=None)
+                             chat_id=chat_id, state=2, content=message_text)
     all_messages.delete(msg)
 
 
@@ -108,7 +108,7 @@ for chat in client.iter_dialogs():
 my_objects.init()
 all_chats = my_objects.Chats(chats, chat_names)
 monitors = all_chats.get_monitored()
-my_objects.Messages()
+all_messages = my_objects.Messages()
 
 # input()
 listener_loop.start()

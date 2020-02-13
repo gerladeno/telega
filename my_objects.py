@@ -66,6 +66,8 @@ class Message(BaseModel):
 
 
 class Messages:
+    messages = []
+
     def __init__(self, messages=None):
         self.messages = []
         if messages is None:
@@ -139,7 +141,6 @@ class Chats:
             chats[chat.id] = chat.name
         return chats
 
-
 # all_messages = Messages()
 #
 # msg = Message(id=150, version=0, user_id=15, act_date='2019-12-12 23:15:04', create_date='2019-12-12 23:15:04',
@@ -151,7 +152,7 @@ class Chats:
 # print(all_messages.messages)
 
 # test_dict = {12: 'goga', 115: 'magoga'}
-#dict_2 = [{17: 'jopa'}, {12: 'goga'}]
+# dict_2 = [{17: 'jopa'}, {12: 'goga'}]
 #
 # for i in dict_2:
 #     print(i)
