@@ -5,6 +5,7 @@ import configparser
 from flask import Flask, render_template, request
 import datetime
 from threading import Thread
+import ast
 from playhouse.sqlite_ext import SqliteExtDatabase
 
 # Init
@@ -19,6 +20,7 @@ config.read("config.ini")
 api_id = config['Telegram']['api_id']
 api_hash = config['Telegram']['api_hash']
 username = config['Telegram']['username']
+chat_names = ast.literal_eval(config['Chat']['monitored'])
 
 client = TelegramClient(
     username, api_id, api_hash,
@@ -29,9 +31,6 @@ client = TelegramClient(
 # Threads
 web_ui = Thread(target=app.run)
 listener_loop = Thread(target=client.run_until_disconnected)
-
-# Other
-chat_names = ('Это Куэльпорр детка!', 'Зип Зяп и Зюп', 'RT на русском', 'Наш Ривер Парк')
 
 
 # Generate and display main page
