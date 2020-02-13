@@ -112,8 +112,8 @@ my_objects.Messages()
 
 # input()
 listener_loop.start()
-quit()
 web_ui.start()
 
-web_ui.join()
 listener_loop.join()
+quit()
+web_ui.join()
