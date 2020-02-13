@@ -160,5 +160,5 @@ class Chats:
 # if 17 not in dict_2:
 #     print(72)
 
-a = Messages.get_all_messages()[3]
-pass
+# a = Messages.get_all_messages()[3]
+# pass

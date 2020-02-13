@@ -111,8 +111,9 @@ monitors = all_chats.get_monitored()
 my_objects.Messages()
 
 # input()
-web_ui.start()
 listener_loop.start()
+quit()
+web_ui.start()
 
 web_ui.join()
 listener_loop.join()
