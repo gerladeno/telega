@@ -1,12 +1,12 @@
 *.log
 schema.db
-*.session
+*.sessio*
 /.idea
 __pycache__
 /.git
 config.ini
 *.session
 /.vscode
-peewee.db
+peewee.d*
 Front/telega/node_modules
 Front/telega/dist

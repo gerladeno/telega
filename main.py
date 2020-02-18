@@ -6,6 +6,7 @@ from flask import Flask, render_template, request
 import datetime
 from threading import Thread
 import ast
+# from flask.ext.aiohttp import AioHTTP, async
 from playhouse.sqlite_ext import SqliteExtDatabase
 
 # Init
@@ -35,6 +36,7 @@ listener_loop = Thread(target=client.run_until_disconnected)
 
 # Generate and display main page
 @app.route('/')
+# @async
 def crutch():
     monitored_chat_id = request.args.get('chat', default=0, type=int)
     viewed_message_id = request.args.get('msg', default=0, type=int)
@@ -112,8 +114,8 @@ all_messages = my_objects.Messages()
 
 # input()
 listener_loop.start()
-web_ui.start()
+# web_ui.start()
 
 listener_loop.join()
-quit()
-web_ui.join()
+# quit()
+# web_ui.join()

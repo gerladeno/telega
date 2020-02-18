@@ -79,14 +79,19 @@ class Messages:
 
     def add(self, message):
         self.messages.append(message)
+        print(1)
         message.save()
+        print(2)
 
     def modify(self, message):
         for msg in self.messages:
             if str(msg.id) == str(message.id):
                 msg.modify()
+                print(0)
         self.messages.append(message)
+        print(1)
         message.save()
+        print(2)
 
     def delete(self, message):
         for msg in self.messages:
