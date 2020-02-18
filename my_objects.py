@@ -85,7 +85,7 @@ class Messages:
 
     def modify(self, message):
         for msg in self.messages:
-            if str(msg.id) == str(message.id):
+            if str(msg.id) == str(message.id) and str(msg.chat_id) == str(message.chat_id):
                 msg.modify()
                 print(0)
         self.messages.append(message)
@@ -95,7 +95,7 @@ class Messages:
 
     def delete(self, message):
         for msg in self.messages:
-            if str(msg.id) == str(message.id):
+            if str(msg.id) == str(message.id) and str(msg.chat_id) == str(message.chat_id):
                 msg.delete_()
                 message.chat_id = msg.chat_id
         self.messages.append(message)
@@ -145,26 +145,3 @@ class Chats:
         for chat in q:
             chats[chat.id] = chat.name
         return chats
-
-# all_messages = Messages()
-#
-# msg = Message(id=150, version=0, user_id=15, act_date='2019-12-12 23:15:04', create_date='2019-12-12 23:15:04',
-#               chat_id=-1001036362176, state=0, content='noga')
-#
-# all_messages.add(msg)
-#
-# print(Chats.get_monitored())
-# print(all_messages.messages)
-
-# test_dict = {12: 'goga', 115: 'magoga'}
-# dict_2 = [{17: 'jopa'}, {12: 'goga'}]
-#
-# for i in dict_2:
-#     print(i)
-#     if i in test_dict:
-#         print('Yes')
-# if 17 not in dict_2:
-#     print(72)
-
-# a = Messages.get_all_messages()[3]
-# pass
