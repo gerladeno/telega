@@ -1,27 +1,31 @@
+from datetime import datetime
 from peewee import *
-from playhouse.sqlite_ext import SqliteExtDatabase, RowIDField
+from playhouse.postgres_ext import PostgresqlExtDatabase
 
 # DB
-db = SqliteExtDatabase('peewee.db', pragmas=(
-    ('cache_size', -1024 * 64),  # 64MB page-cache.
-    ('journal_mode', 'wal'),  # Use WAL-mode (you should always use this!).
-    ('foreign_keys', 1),
-    ('c_extensions', True)))  # Enforce foreign-key constraints.
+db = PostgresqlExtDatabase('postgres', user='tcl', password='tcl', host="localhost", port=5432, autoconnect=True)
 
 
 def init():
     with db:
         if not db.table_exists('Chat'):
-            db.create_tables([Chat, User, Message])
+            db.create_tables([Chat])
+        if not db.table_exists('Message'):
+            db.create_tables([Message])
+        if not db.table_exists('User'):
+            db.create_tables([User])
 
 
 class BaseModel(Model):
+    _create_at = DateTimeField(default=datetime.now())
+    _modified_at = DateTimeField(default=datetime.now())
+
     class Meta:
         database = db
 
 
 class Chat(BaseModel):
-    id = IntegerField(unique=True, primary_key=True)
+    id = BigIntegerField(primary_key=True)
     name = TextField()
     track = BooleanField()
     title = TextField(null=True)
@@ -31,7 +35,7 @@ class Chat(BaseModel):
 
 
 class User(BaseModel):
-    id = IntegerField()
+    id = BigIntegerField()
     username = TextField()
     phone = TextField()
     photo = BlobField(null=True)
@@ -41,12 +45,10 @@ class User(BaseModel):
 
 
 class Message(BaseModel):
-    rowid = RowIDField(primary_key=True)
-    id = IntegerField(index=True)
+    uid = BigAutoField(primary_key=True)
+    id = BigIntegerField()
     version = IntegerField()
-    user_id = IntegerField(null=True)
-    act_date = DateTimeField()
-    create_date = DateTimeField()
+    user_id = BigIntegerField(null=True)
     chat_id = ForeignKeyField(Chat, field='id', backref='messages', db_column='chat_id')
     state = IntegerField()
     content = TextField(null=True)
@@ -79,19 +81,15 @@ class Messages:
 
     def add(self, message):
         self.messages.append(message)
-        print(1)
-        message.save()
-        print(2)
+        # print(1)
 
     def modify(self, message):
         for msg in self.messages:
             if str(msg.id) == str(message.id) and str(msg.chat_id) == str(message.chat_id):
                 msg.modify()
-                print(0)
+        #       print(0)
         self.messages.append(message)
-        print(1)
-        message.save()
-        print(2)
+        # print(1)
 
     def delete(self, message):
         for msg in self.messages:
@@ -99,7 +97,6 @@ class Messages:
                 msg.delete_()
                 message.chat_id = msg.chat_id
         self.messages.append(message)
-        message.save()
 
     @staticmethod
     def get_all_messages():
