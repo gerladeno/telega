@@ -1,6 +1,3 @@
 <template>
-    <div>
-        <h1>EmptyLayouts</h1>
-        <router-view/>
-    </div>
+    <router-view/>
 </template>
