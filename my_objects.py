@@ -6,10 +6,13 @@ import logging.handlers
 
 LOG_FILENAME = u'main.log'
 
+# logger = logging.getLogger('TCL')
 logging.basicConfig(format=u'%(levelname)-8s [%(asctime)s] %(message)s', level=logging.INFO, filename=LOG_FILENAME)
-# logger = logging.getLogger('peewee')
+# logger.setLevel(logging.INFO)
 # handler = logging.handlers.RotatingFileHandler(LOG_FILENAME, maxBytes=20, backupCount=15)
+# logger.addHandler(logging.StreamHandler())
 # logger.addHandler(handler)
+
 # DB
 db = PostgresqlExtDatabase('postgres', user='tcl', password='tcl', host="localhost", port=5432, autoconnect=True)
 
