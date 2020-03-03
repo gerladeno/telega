@@ -1,7 +1,15 @@
 from datetime import datetime
 from peewee import *
 from playhouse.postgres_ext import PostgresqlExtDatabase
+import logging
+import logging.handlers
 
+LOG_FILENAME = u'main.log'
+
+logger = logging.getLogger('peewee')
+logger.addHandler(logging.StreamHandler())
+logging.basicConfig(format=u'%(levelname)-8s [%(asctime)s] %(message)s', level=logging.DEBUG)
+handler = logging.handlers.RotatingFileHandler(LOG_FILENAME, maxBytes=2000, backupCount=15)
 # DB
 db = PostgresqlExtDatabase('postgres', user='tcl', password='tcl', host="localhost", port=5432, autoconnect=True)
 
@@ -10,10 +18,13 @@ def init():
     with db:
         if not db.table_exists('Chat'):
             db.create_tables([Chat])
+            logging.debug(u'Table Chat not found, created anew')
         if not db.table_exists('Message'):
             db.create_tables([Message])
+            logging.debug(u'Table Message not found, created anew')
         if not db.table_exists('User'):
             db.create_tables([User])
+            logging.debug(u'Table User not found, created anew')
 
 
 class BaseModel(Model):
@@ -81,21 +92,20 @@ class Messages:
 
     def add(self, message):
         self.messages.append(message)
-        # print(1)
 
     def modify(self, message):
         for msg in self.messages:
             if str(msg.id) == str(message.id) and str(msg.chat_id) == str(message.chat_id):
                 msg.modify()
-        #       print(0)
+                logging.debug(u'Modified message. Id: {}, text: {}'.format(msg.id, msg.content))
         self.messages.append(message)
-        # print(1)
 
     def delete(self, message):
         for msg in self.messages:
             if str(msg.id) == str(message.id) and str(msg.chat_id) == str(message.chat_id):
                 msg.delete_()
                 message.chat_id = msg.chat_id
+                logging.debug(u'Deleted message. Chat: {}, Id: {}, text:{}'.format(msg.chat_id, msg.id, msg.content))
         self.messages.append(message)
 
     @staticmethod
