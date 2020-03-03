@@ -37,14 +37,14 @@ async def new_message(event):
     message_id = str(message['id'])
     message_date = message['date'].strftime("%Y-%m-%d %H:%M:%S")
     chat_id = event.message.chat_id
-    logging.debug("new_message", message_text, user_id, message_id)
+    logging.info(u'New message created. Id: {}, content: {}'.format(message_text, message_id))
     try:
         msg = Message.create(id=message_id, version=0, user_id=user_id, _modified_at=message_date,
                              _create_at=message_date,
                              chat_id=chat_id, state=0, content=message_text)
         all_messages.add(msg)
     except PeeweeException:
-        logging.error("Failed to save new message. Id :{}, text:{}".format(message_id, message_text))
+        logging.error(u'Failed to save new message. Id :{}, text:{}'.format(message_id, message_text))
 
 
 @client.on(events.MessageEdited(chats=chat_names))
@@ -55,14 +55,14 @@ async def message_edited(event):
     message_id = str(message['id'])
     message_date = message['date']
     chat_id = event.message.chat_id
-    logging.debug("edited", message_text, user_id, message_id)
+    logging.info(u'Message was edited. Id: {}, content: {}'.format(message_text, message_id))
     try:
         msg = Message.create(id=message_id, version=0, user_id=user_id, _modified_at=message_date,
                              _create_at=message_date,
                              chat_id=chat_id, state=1, content=message_text)
         all_messages.modify(msg)
     except PeeweeException:
-        logging.error("Failed to edit message. Id :{}, text:{}".format(message_id, message_text))
+        logging.error(u'Failed to edit message. Id :{}, text:{}'.format(message_id, message_text))
 
 
 @client.on(events.MessageDeleted())
@@ -72,31 +72,31 @@ async def message_deleted(event):
     message_id = str(event.deleted_id)
     message_date = datetime.now()
     chat_id = ''
-    logging.debug("delete", message_text, user_id, message_id)
+    logging.info(u'Message was deleted. Id: {}, content: {}'.format(message_text, message_id))
     try:
         msg = Message.create(id=message_id, version=0, user_id=user_id, _modified_at=message_date,
                              _create_at=message_date,
                              chat_id=chat_id, state=2, content=message_text)
         all_messages.delete(msg)
     except PeeweeException:
-        logging.error("Failed to delete message. Id: {}, text: {}".format(message_id, message_text))
+        logging.error(u'Failed to delete message. Id: {}, text: {}'.format(message_id, message_text))
 
 
 # if __name__ == "__main__":
 
 client.start()
-logging.info('connected')
+logging.info(u'Connected')
 # Get chats
 chats = {}
 for chat in client.iter_dialogs():
     chats[chat.id] = chat.name
-logging.info('Chats loaded from tg')
+logging.info(u'Chats loaded from tg')
 # Init schema and get messages
 init()
-logging.info('Schema inited')
+logging.info(u'Schema inited')
 all_chats = Chats(chats, chat_names)
-logging.info('Chats exported to DB')
+logging.info(u'Chats exported to DB')
 all_messages = Messages()
-logging.info('All messages inited')
+logging.info(u'All messages inited')
 
 client.run_until_disconnected()
