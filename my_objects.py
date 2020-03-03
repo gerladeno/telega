@@ -9,7 +9,7 @@ LOG_FILENAME = u'main.log'
 logger = logging.getLogger('peewee')
 logger.addHandler(logging.StreamHandler())
 logging.basicConfig(format=u'%(levelname)-8s [%(asctime)s] %(message)s', level=logging.INFO)
-handler = logging.handlers.RotatingFileHandler(LOG_FILENAME, maxBytes=2000, backupCount=15)
+handler = logging.handlers.RotatingFileHandler(LOG_FILENAME, maxBytes=20, backupCount=15)
 # DB
 db = PostgresqlExtDatabase('postgres', user='tcl', password='tcl', host="localhost", port=5432, autoconnect=True)
 

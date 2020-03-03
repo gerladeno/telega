@@ -2,7 +2,7 @@ from peewee import PeeweeException
 from telethon import TelegramClient, connection, events
 from my_objects import *
 import configparser
-import datetime
+from datetime import datetime
 import ast
 
 # TODO rework save to postgres
@@ -79,7 +79,7 @@ async def message_deleted(event):
                              chat_id=chat_id, state=2, content=message_text)
         all_messages.delete(msg)
     except PeeweeException:
-        logging.error(u'Failed to delete message. Id: {}, text: {}'.format(message_id, message_text))
+        logging.error(u'Failed to delete message. Id: {}'.format(message_id))
 
 
 # if __name__ == "__main__":
