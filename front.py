@@ -1,8 +1,9 @@
 import my_objects
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, url_for
 import configparser
 import ast
 import logging
+import os
 
 FRONT_LOG_FILENAME = u'logs/front.log'
 
@@ -41,6 +42,14 @@ def crutch():
     template_context = dict(name=username, chat_messages=chat_messages, message_versions=message_versions,
                             monitored=monitors)
     return render_template('index.html', **template_context)
+
+
+@app.route('/logs/')
+def logs():
+    log_files = os.listdir('logs')
+    path = os.path.abspath('logs')
+    template_context = dict(log_files=log_files, path=path)
+    return render_template('logs.html', **template_context)
 
 
 app.run(host='0.0.0.0')
