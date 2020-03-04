@@ -33,13 +33,13 @@ db = PostgresqlExtDatabase('postgres', user='tcl', password='tcl', host="localho
 
 def init():
     with db:
-        if not db.table_exists('Chat'):
+        if not db.table_exists('chat', 'tcl'):
             db.create_tables([Chat])
             db_logger.info(u'Table Chat not found, created anew')
-        if not db.table_exists('Message'):
+        if not db.table_exists('message', 'tcl'):
             db.create_tables([Message])
             db_logger.info(u'Table Message not found, created anew')
-        if not db.table_exists('User'):
+        if not db.table_exists('user', 'tcl'):
             db.create_tables([User])
             db_logger.info(u'Table User not found, created anew')
 
