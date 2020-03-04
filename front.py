@@ -2,6 +2,15 @@ import my_objects
 from flask import Flask, render_template, request
 import configparser
 import ast
+import logging
+
+FRONT_LOG_FILENAME = u'logs/front.log'
+
+for handler in logging.root.handlers[:]:
+    logging.root.removeHandler(handler)
+
+logging.basicConfig(format=u'%(levelname)-8s [%(asctime)s] %(message)s', level=logging.INFO,
+                    filename=FRONT_LOG_FILENAME)
 
 # Init
 # Flask
@@ -17,8 +26,8 @@ chat_names = ast.literal_eval(config['Chat']['monitored'])
 # Generate and display main page
 @app.route('/')
 def crutch():
-    monitored_chat_id = request.args.get('chat', default=0, type=int)
-    viewed_message_id = request.args.get('msg', default=0, type=int)
+    monitored_chat_id = request.args.get('chat', default=0, type=str)
+    viewed_message_id = request.args.get('msg', default=0, type=str)
     monitors = my_objects.Chats.get_monitored()
     all_messages = my_objects.Messages.get_all_messages()
     chat_messages = []

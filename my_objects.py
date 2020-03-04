@@ -4,14 +4,28 @@ from playhouse.postgres_ext import PostgresqlExtDatabase
 import logging
 import logging.handlers
 
-LOG_FILENAME = u'main.log'
+CONNECTION_LOG_FILENAME = u'logs/connect.log'
+MSG_LOG_FILENAME = u'logs/msg.log'
+DB_LOG_FILENAME = u'logs/db.log'
 
-# logger = logging.getLogger('TCL')
-logging.basicConfig(format=u'%(levelname)-8s [%(asctime)s] %(message)s', level=logging.INFO, filename=LOG_FILENAME)
-# logger.setLevel(logging.INFO)
-# handler = logging.handlers.RotatingFileHandler(LOG_FILENAME, maxBytes=20, backupCount=15)
-# logger.addHandler(logging.StreamHandler())
-# logger.addHandler(handler)
+logging.basicConfig(format=u'%(levelname)-8s [%(asctime)s] %(message)s', level=logging.INFO,
+                    filename=CONNECTION_LOG_FILENAME)
+
+formatter = logging.Formatter(u'%(levelname)-8s [%(asctime)s] %(message)s')
+
+handler = logging.handlers.TimedRotatingFileHandler(MSG_LOG_FILENAME)
+msg_logger = logging.getLogger('TCL')
+msg_logger.setLevel(logging.INFO)
+msg_logger.addHandler(handler)
+msg_logger.propagate = False
+handler.setFormatter(formatter)
+
+handler = logging.handlers.TimedRotatingFileHandler(DB_LOG_FILENAME)
+db_logger = logging.getLogger('DB')
+db_logger.setLevel(logging.INFO)
+db_logger.addHandler(handler)
+db_logger.propagate = False
+handler.setFormatter(formatter)
 
 # DB
 db = PostgresqlExtDatabase('postgres', user='tcl', password='tcl', host="localhost", port=5432, autoconnect=True)
@@ -21,13 +35,13 @@ def init():
     with db:
         if not db.table_exists('Chat'):
             db.create_tables([Chat])
-            logging.info(u'Table Chat not found, created anew')
+            db_logger.info(u'Table Chat not found, created anew')
         if not db.table_exists('Message'):
             db.create_tables([Message])
-            logging.info(u'Table Message not found, created anew')
+            db_logger.info(u'Table Message not found, created anew')
         if not db.table_exists('User'):
             db.create_tables([User])
-            logging.info(u'Table User not found, created anew')
+            db_logger.info(u'Table User not found, created anew')
 
 
 class BaseModel(Model):
@@ -39,7 +53,7 @@ class BaseModel(Model):
 
 
 class Chat(BaseModel):
-    id = BigIntegerField(primary_key=True)
+    id = TextField(primary_key=True)
     name = TextField()
     track = BooleanField()
     title = TextField(null=True)
@@ -49,7 +63,7 @@ class Chat(BaseModel):
 
 
 class User(BaseModel):
-    id = BigIntegerField()
+    id = TextField()
     username = TextField()
     phone = TextField()
     photo = BlobField(null=True)
@@ -60,9 +74,9 @@ class User(BaseModel):
 
 class Message(BaseModel):
     uid = BigAutoField(primary_key=True)
-    id = BigIntegerField()
+    id = TextField()
     version = IntegerField()
-    user_id = BigIntegerField(null=True)
+    user_id = TextField(null=True)
     chat_id = ForeignKeyField(Chat, field='id', backref='messages', db_column='chat_id')
     state = IntegerField()
     content = TextField(null=True)
@@ -95,20 +109,21 @@ class Messages:
 
     def add(self, message):
         self.messages.append(message)
+        db_logger.info(u'Created new message. Id: {}, text: {}'.format(message.id, message.content))
 
     def modify(self, message):
         for msg in self.messages:
-            if str(msg.id) == str(message.id) and str(msg.chat_id) == str(message.chat_id):
+            if msg.id == message.id and msg.chat_id == message.chat_id:
                 msg.modify()
-                logging.info(u'Modified message. Id: {}, text: {}'.format(msg.id, msg.content))
+                db_logger.info(u'Modified message. Id: {}, text: {}'.format(msg.id, msg.content))
         self.messages.append(message)
 
     def delete(self, message):
         for msg in self.messages:
-            if str(msg.id) == str(message.id) and str(msg.chat_id) == str(message.chat_id):
+            if msg.id == message.id and msg.chat_id == message.chat_id:
                 msg.delete_()
                 message.chat_id = msg.chat_id
-                logging.info(u'Deleted message. Chat: {}, Id: {}, text:{}'.format(msg.chat_id, msg.id, msg.content))
+                db_logger.info(u'Deleted message. Chat: {}, Id: {}, text:{}'.format(msg.chat_id, msg.id, msg.content))
         self.messages.append(message)
 
     @staticmethod
