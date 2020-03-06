@@ -1,6 +1,11 @@
 <template>
   <div class="row login-box valign-wrapper">
     <div class="col s12 m8 offset-m2 l4 offset-l4">
+      <div v-if="errorMessage" class="row">
+        <div class="card-panel deep-orange accent-2">
+          <span class="white-text">{{errorMessage}}</span>
+        </div>
+      </div>
       <div class="row">
         <div class="card">
           <div class="card-content">
@@ -44,17 +49,26 @@ export default {
       login: "",
       password: "",
 
-      isLoad: false
+      isLoad: false,
+      errorMessage: ""
     };
   },
   computed: {
+    // isSessionValid: () => 'Any Text',
     ...mapGetters(["isSessionValid"])
   },
   methods: {
     ...mapActions(["RetriveToken"]),
-    submit: function() {
+    submit: async function() {
       this.isLoad = true;
-      this.RetriveToken({ login: this.login, password: this.password });
+      await this.RetriveToken({
+        login: this.login,
+        password: this.password
+      })
+        .then(result => this.$router.push({ name: "/" }))
+        .catch(error => this.errorMessage = error)
+
+        this.isLoad = false;
     }
   }
 };
