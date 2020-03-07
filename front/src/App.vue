@@ -8,7 +8,7 @@
 
 <script>
 import EmptyLayout from "@/layouts/EmptyLayout";
-
+import MainLayout from "@/layouts/MainLayout" 
 export default {
   name: "App",
   computed: {
@@ -21,7 +21,8 @@ export default {
   },
   mounted() {},
   components: {
-    EmptyLayout
+    EmptyLayout,
+    MainLayout
   }
 };
 </script>

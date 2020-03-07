@@ -1,7 +1,7 @@
 <template>
   <div class="row login-box valign-wrapper">
     <div class="col s12 m8 offset-m2 l4 offset-l4">
-      <div v-if="errorMessage" class="row">
+      <div class="row scale-transition" v-bind:class="{'scale-out': !errorMessage}">
         <div class="card-panel deep-orange accent-2">
           <span class="white-text">{{errorMessage}}</span>
         </div>
@@ -9,7 +9,6 @@
       <div class="row">
         <div class="card">
           <div class="card-content">
-            {{isSessionValid}}
             <form @submit.prevent="submit()">
               <div class="input-field">
                 <input placeholder="Login" id="login" type="text" class="validate" v-model="login" />
@@ -55,20 +54,22 @@ export default {
   },
   computed: {
     // isSessionValid: () => 'Any Text',
-    ...mapGetters(["isSessionValid"])
+    ...mapGetters(["session/isValid"])
   },
   methods: {
-    ...mapActions(["RetriveToken"]),
+    ...mapActions({ RetriveToken: "session/RetriveToken" }),
     submit: async function() {
       this.isLoad = true;
       await this.RetriveToken({
         login: this.login,
         password: this.password
       })
-        .then(result => this.$router.push({ name: "/" }))
-        .catch(error => this.errorMessage = error)
+        .then(result => this.$router.push({ name: "Master" }))
+        .catch(error => {
+          (this.login = ""), (this.password = ""), (this.errorMessage = error);
+        });
 
-        this.isLoad = false;
+      this.isLoad = false;
     }
   }
 };

@@ -39,7 +39,7 @@ def token_required(f):
 @app.route('/say')
 @token_required
 def index(user):
-    return f"<H1>Hi {user.username}!</H1>"
+    return f"Hi {user.username}!"
 
 
 @app.route('/create', methods=['POST'])
