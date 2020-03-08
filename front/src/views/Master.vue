@@ -14,7 +14,7 @@ export default {
     methods:{
         load: function(){
             axios.get("/say")
-            .then(response => this.message = response)
+            .then(response => this.message = response.data)
             .catch(error => this.message = error)
         }
     },
