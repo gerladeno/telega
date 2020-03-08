@@ -1,4 +1,7 @@
 import axios from 'axios'
+
+if (localStorage.getItem('token'))
+    axios.defaults.headers.common["Bearer"] = localStorage.getItem('token')
 export default {
     namespaced: true,
     state: {
