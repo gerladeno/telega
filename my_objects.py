@@ -13,14 +13,14 @@ logging.basicConfig(format=u'%(levelname)-8s [%(asctime)s] %(message)s', level=l
 
 formatter = logging.Formatter(u'%(levelname)-8s [%(asctime)s] %(message)s')
 
-handler = logging.handlers.TimedRotatingFileHandler(MSG_LOG_FILENAME)
+handler = logging.handlers.TimedRotatingFileHandler(MSG_LOG_FILENAME, when='D', interval=7)
 msg_logger = logging.getLogger('TCL')
 msg_logger.setLevel(logging.INFO)
 msg_logger.addHandler(handler)
 msg_logger.propagate = False
 handler.setFormatter(formatter)
 
-handler = logging.handlers.TimedRotatingFileHandler(DB_LOG_FILENAME)
+handler = logging.handlers.TimedRotatingFileHandler(DB_LOG_FILENAME, when='D', interval=7)
 db_logger = logging.getLogger('DB')
 db_logger.setLevel(logging.INFO)
 db_logger.addHandler(handler)
