@@ -1,8 +1,11 @@
 from flask import Flask, jsonify, request, make_response
+from playhouse.shortcuts import model_to_dict, dict_to_model
 import jwt
 import datetime
 from functools import wraps
 from db_model import *
+import json
+
 
 Init()
 
@@ -16,7 +19,6 @@ def add_header(response):
     response.headers['Access-Control-Allow-Headers'] = '*'
     response.headers['Access-Control-Allow-Methods'] = 'GET, POST'
     return response
-
 
 def token_required(f):
     @wraps(f)
@@ -41,6 +43,17 @@ def token_required(f):
 def index(user):
     return f"Hi {user.username}!"
 
+@app.route('/chats', methods=['GET'])
+@token_required
+def chats(user):
+    allChats = [model_to_dict(chat) for chat in Chat.select()]
+    return jsonify({'Message':'Success', 'Chats': allChats}) 
+
+@app.route('/chats/<int:chat_id>/messages/', methods=['GET'])
+@token_required
+def messages(user, chat_id):
+    allMessages = [model_to_dict(message) for message in Message.select()] # .where(Message.chat == chat_id & Message.state == 1)
+    return jsonify({'Message':'Success', 'Messages': allMessages}) 
 
 @app.route('/create', methods=['POST'])
 def create():
