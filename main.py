@@ -2,29 +2,12 @@ from peewee import PeeweeException
 from telethon import TelegramClient, connection, events
 from my_objects import *
 from datetime import datetime
-import os
+
 import shutil
 
 # TODO rework file links
 # TODO rework front completely
 # TODO get old messages
-
-# Set connection
-if 'USER' in os.environ and os.environ['USER'] == 'root':
-    client = TelegramClient(username, api_id, api_hash)
-    logging.info(u'Connecting directly')
-else:
-    client = TelegramClient(
-        username, api_id, api_hash,
-        connection=connection.ConnectionTcpMTProxyRandomizedIntermediate,
-        proxy=('proxy.mtproto.co', 443, '11112222333344445555666677778888')
-    )
-    logging.info(u'Connecting via MTProxy')
-
-for directory in dirlist:
-    if not os.path.exists(dirlist[directory]):
-        os.makedirs(dirlist[directory])
-
 
 # Listeners
 @client.on(events.NewMessage(chats=chat_names))

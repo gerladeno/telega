@@ -2,6 +2,8 @@ import configparser
 import ast
 import logging
 import logging.handlers
+import os
+from telethon import TelegramClient, connection, events
 
 # Configs
 config = configparser.ConfigParser()
@@ -13,6 +15,9 @@ try:
     username = config['Telegram']['username']
     chat_names = ast.literal_eval(config['Chat']['monitored'])
     dirlist = ast.literal_eval(config['Dirs']['List'])
+    proxy_site = config['Proxy']['site']
+    proxy_port = int(config['Proxy']['port'])
+    proxy_secret = config['Proxy']['secret']
 except Exception:
     logging.warning(u'No config file with proper settings found. Starting with default settings')
     api_id = 1033718
@@ -21,6 +26,9 @@ except Exception:
     chat_names = ("Telegram", "Рынки Деньги Власть | РДВ", "MarketTwits")
     dirlist = {'logs': "logs", 'media': "media"}
 
+for directory in dirlist:
+    if not os.path.exists(dirlist[directory]):
+        os.makedirs(dirlist[directory])
 
 # Logs
 CONNECTION_LOG_FILENAME = dirlist['logs'] + u'/connect.log'
@@ -45,3 +53,16 @@ db_logger.setLevel(logging.INFO)
 db_logger.addHandler(handler)
 db_logger.propagate = False
 handler.setFormatter(formatter)
+
+# Set connection
+
+if 'USER' in os.environ and os.environ['USER'] == 'root':
+    client = TelegramClient(username, api_id, api_hash)
+    logging.info(u'Connecting directly')
+else:
+    client = TelegramClient(
+        username, api_id, api_hash,
+        connection=connection.ConnectionTcpMTProxyRandomizedIntermediate,
+        proxy=(proxy_site, proxy_port, proxy_secret)
+    )
+    logging.info(u'Connecting via MTProxy')
