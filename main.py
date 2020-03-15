@@ -22,12 +22,14 @@ username = config['Telegram']['username']
 chat_names = ast.literal_eval(config['Chat']['monitored'])
 dirlist = ast.literal_eval(config['Dirs']['List'])
 
-client = TelegramClient(
-    username, api_id, api_hash
-    ,
-    connection=connection.ConnectionTcpMTProxyRandomizedIntermediate,
-    proxy=('proxy.mtproto.co', 443, '11112222333344445555666677778888')
-)
+if 'HOSTNAME' in os.environ and os.environ['HOSTNAME'] == 'ruvds-q0byo':
+    client = TelegramClient(username, api_id, api_hash)
+else:
+    client = TelegramClient(
+        username, api_id, api_hash,
+        connection=connection.ConnectionTcpMTProxyRandomizedIntermediate,
+        proxy=('proxy.mtproto.co', 443, '11112222333344445555666677778888')
+    )
 
 for directory in dirlist:
     if not os.path.exists(directory):
