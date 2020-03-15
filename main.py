@@ -1,6 +1,6 @@
 from peewee import PeeweeException
 from telethon import TelegramClient, connection, events
-from my_objects import *
+from DB.data_access import *
 from datetime import datetime
 
 import shutil
