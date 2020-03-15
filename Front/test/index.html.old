@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en" class="no-js">
+<head>
+    <!-- Mobile Specific Meta -->
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <!-- Author Meta -->
+    <meta name="author" content="CodePixar">
+    <!-- Meta Description -->
+    <meta name="description" content="">
+    <!-- Meta Keyword -->
+    <meta name="keywords" content="">
+    <!-- meta character set -->
+    <meta charset="UTF-8">
+    <!-- Site Title -->
+    <title>{{name}}</title>
+
+    <link href="https://fonts.googleapis.com/css?family=Poppins:300,500,600" rel="stylesheet">
+    <!--
+    CSS
+    ============================================= -->
+    <link rel="stylesheet" href="css/linearicons.css">
+    <link rel="stylesheet" href="css/owl.carousel.css">
+    <link rel="stylesheet" href="css/font-awesome.min.css">
+    <link rel="stylesheet" href="css/nice-select.css">
+    <link rel="stylesheet" href="css/magnific-popup.css">
+    <link rel="stylesheet" href="css/bootstrap.css">
+    <link rel="stylesheet" href="css/main.css">
+</head>
+<body>
+<div class="main-wrapper">
+    <!-- Start Feature Area -->
+    <section class="featured-area">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-6">
+                    <div class="section-title text-center">
+                        <h2 class="text-white">{{name}}</h2>
+                        <p class="text-white">This is a very raw example of web-ui to {{name}}</p>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="single-feature">
+                        <div class="desc text-center mt-30">
+                            <h4 class="text-white">List of chats here</h4>
+                            {% for chat in monitored %}
+                            <a href="?chat={{chat}}" class="primary-btn"><span>{{monitored[chat]}}</span></a>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="single-feature">
+                        <div class="desc text-center mt-30">
+                            <h4 class="text-white">List of messages</h4>
+                            {% for message in chat_messages %}
+                            <p class="text-white">{{message._create_at}}: {{message.content}}</p>
+                            {% if message.state != 0 %}
+                            <a href="?chat={{message.chat_id}}&msg={{message.id}}" class="primary-btn"><span>View message history</span></a>
+                            {% endif %}
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="single-feature">
+                        <div class="desc text-center mt-30">
+                            <h4 class="text-white">Message history</h4>
+                            {% for message in message_versions %}
+                            <p class="text-white">{{message._modified_at}}. Version is {{message.version}}, state is
+                                {{message.state}}. Content of this version is in the next line. <br>{{message.content}}
+                            </p>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- End Feature Area -->
+</div>
+</body>
+</html>

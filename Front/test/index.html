@@ -1,84 +1,83 @@
 <!DOCTYPE html>
 <html lang="en" class="no-js">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<!-- Compiled and minified CSS -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+<!-- Compiled and minified JavaScript -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
 <head>
-    <!-- Mobile Specific Meta -->
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <!-- Author Meta -->
-    <meta name="author" content="CodePixar">
-    <!-- Meta Description -->
-    <meta name="description" content="">
-    <!-- Meta Keyword -->
-    <meta name="keywords" content="">
-    <!-- meta character set -->
     <meta charset="UTF-8">
-    <!-- Site Title -->
     <title>{{name}}</title>
+    <style>
+    .scroll_left {
+position: fixed;
+overflow: auto;
+height: 100%;
+width:20%;
+will-change: transform;
+backface-visibility: hidden;
+padding-left: 0;
+}
+.scroll_right {
+position: fixed;
+overflow: auto;
+height: 100%;
+width:30%;
+will-change: transform;
+backface-visibility: hidden;
+padding-left: 0;
+}
+.mid {
+width: 50%;
+margin-left: 20%
+}
 
-    <link href="https://fonts.googleapis.com/css?family=Poppins:300,500,600" rel="stylesheet">
-    <!--
-    CSS
-    ============================================= -->
-    <link rel="stylesheet" href="css/linearicons.css">
-    <link rel="stylesheet" href="css/owl.carousel.css">
-    <link rel="stylesheet" href="css/font-awesome.min.css">
-    <link rel="stylesheet" href="css/nice-select.css">
-    <link rel="stylesheet" href="css/magnific-popup.css">
-    <link rel="stylesheet" href="css/bootstrap.css">
-    <link rel="stylesheet" href="css/main.css">
+    </style>
 </head>
+<div class="navbar-fixed">
+<nav>
+    <div class="nav-wrapper">
+        <a href="#" class="brand-logo">{{name}}</a>
+        <ul id="nav-mobile" class="right hide-on-med-and-down">
+            <li><a href="/">Main</a></li>
+            <li><a href="logs/">Logs</a></li>
+        </ul>
+    </div>
+</nav>
+</div>
 <body>
-<div class="main-wrapper">
-    <!-- Start Feature Area -->
-    <section class="featured-area">
-        <div class="container">
-            <div class="row justify-content-center">
-                <div class="col-lg-6">
-                    <div class="section-title text-center">
-                        <h2 class="text-white">{{name}}</h2>
-                        <p class="text-white">This is a very raw example of web-ui to {{name}}</p>
-                    </div>
-                </div>
+<div class="col scroll_left">
+    {% for chat in monitored %}
+    <a href="?chat={{chat}}" class="waves-effect waves-light btn"><span>{{monitored[chat]}}</span></a>
+    <br>
+    {% endfor %}
+</div>
+<div class="col mid">
+    {% for message in chat_messages %}
+    <div class="card blue-grey darken-1">
+        <div class="card-content white-text">
+            <span class="card-title">{{message._create_at}}</span>
+            <p>{{message.content}}</p>
+            {% if message.state != 0 %}
+            <div class="card-action">
+                <a href="?chat={{message.chat_id}}&msg={{message.id}}"
+                   class="primary-btn">View message history</a>
             </div>
-            <div class="row">
-                <div class="col-md-4">
-                    <div class="single-feature">
-                        <div class="desc text-center mt-30">
-                            <h4 class="text-white">List of chats here</h4>
-                            {% for chat in monitored %}
-                            <a href="?chat={{chat}}" class="primary-btn"><span>{{monitored[chat]}}</span></a>
-                            {% endfor %}
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="single-feature">
-                        <div class="desc text-center mt-30">
-                            <h4 class="text-white">List of messages</h4>
-                            {% for message in chat_messages %}
-                            <p class="text-white">{{message._create_at}}: {{message.content}}</p>
-                            {% if message.state != 0 %}
-                            <a href="?chat={{message.chat_id}}&msg={{message.id}}" class="primary-btn"><span>View message history</span></a>
-                            {% endif %}
-                            {% endfor %}
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="single-feature">
-                        <div class="desc text-center mt-30">
-                            <h4 class="text-white">Message history</h4>
-                            {% for message in message_versions %}
-                            <p class="text-white">{{message._modified_at}}. Version is {{message.version}}, state is
-                                {{message.state}}. Content of this version is in the next line. <br>{{message.content}}
-                            </p>
-                            {% endfor %}
-                        </div>
-                    </div>
-                </div>
-            </div>
+            {% endif %}
         </div>
-    </section>
-    <!-- End Feature Area -->
+    </div>
+    {% endfor %}
+</div>
+<div class="col scroll_right">
+    {% for message in message_versions %}
+    <div class="card blue-grey darken-1">
+        <div class="card-content white-text">
+                                <span class="card-title">{{message._modified_at}} Version: {{message.version}}.
+                                    State: {{message.state}}</span>
+            <p>{{message.content}}</p>
+            {% endfor %}
+        </div>
+    </div>
 </div>
 </body>
 </html>

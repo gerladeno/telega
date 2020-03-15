@@ -1,4 +1,4 @@
-import DB.data_access
+import DB.data_access as my_objects
 from flask import Flask, render_template, request, url_for
 import configparser
 import ast
