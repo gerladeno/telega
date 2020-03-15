@@ -22,7 +22,7 @@ username = config['Telegram']['username']
 chat_names = ast.literal_eval(config['Chat']['monitored'])
 dirlist = ast.literal_eval(config['Dirs']['List'])
 
-if 'HOSTNAME' in os.environ and os.environ['HOSTNAME'] == 'ruvds-q0byo':
+if 'HOME' in os.environ and os.environ['HOME'] == 'root':
     client = TelegramClient(username, api_id, api_hash)
     logging.info(u'Connecting directly')
 else:
