@@ -11,3 +11,4 @@ config.ini
 /Front/telega/node_modules
 /Front/telega/dist
 /media
+/front/node_modules
