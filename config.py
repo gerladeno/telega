@@ -18,6 +18,9 @@ try:
     proxy_site = config['Proxy']['site']
     proxy_port = int(config['Proxy']['port'])
     proxy_secret = config['Proxy']['secret']
+    db_host = config['DB']['host']
+    db_user = config['DB']['user']
+    db_password = config['DB']['password']
 except Exception:
     logging.warning(u'No config file with proper settings found. Starting with default settings')
     api_id = 1033718
