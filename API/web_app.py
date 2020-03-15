@@ -1,7 +1,7 @@
 from flask import Flask, jsonify, request, make_response
 from playhouse.shortcuts import model_to_dict, dict_to_model
 import jwt
-import datetime
+from datetime import datetime, timedelta
 from functools import wraps
 from DB.my_objects import *
 import json
@@ -34,6 +34,10 @@ def token_required(f):
 
     return decorated
 
+
+@app.route('/')
+def hello():
+    return "123"
 
 @app.route('/say')
 @token_required
@@ -84,7 +88,7 @@ def login():
     if ('username' not in data.keys() or 'password' not in data.keys()):  # Need wrapper
         return jsonify({'message': 'Invalid fields'}), 401
 
-    user = CUser.get(
+    user = CUser.get_or_none(
         (CUser.username == data['username']) &
         (CUser.password == data['password'])
     )
@@ -92,13 +96,16 @@ def login():
     if (user is None):
         return jsonify({'message': 'Invalid pair login:password'})
 
+    
     token = jwt.encode(
-        {
-            'user_id': user.rowid,
-            'exp': datetime.datetime.utcnow() + datetime.timedelta(days=365)
-        },
-        app.config['SECRET_KEY']
+    {
+        'user_id': user.rowid,
+        'exp': datetime.utcnow() + timedelta(days=365)
+    },
+    app.config['SECRET_KEY']
     )
+
+
 
     return jsonify({'message': 'Successful', 'token': token.decode('UTF-8')})
 
