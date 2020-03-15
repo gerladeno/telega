@@ -1,31 +1,7 @@
 from datetime import datetime
 from peewee import *
 from playhouse.postgres_ext import PostgresqlExtDatabase
-import logging
-import logging.handlers
-
-CONNECTION_LOG_FILENAME = u'logs/connect.log'
-MSG_LOG_FILENAME = u'logs/msg.log'
-DB_LOG_FILENAME = u'logs/db.log'
-
-logging.basicConfig(format=u'%(levelname)-8s [%(asctime)s] %(message)s', level=logging.INFO,
-                    filename=CONNECTION_LOG_FILENAME)
-
-formatter = logging.Formatter(u'%(levelname)-8s [%(asctime)s] %(message)s')
-
-handler = logging.handlers.TimedRotatingFileHandler(MSG_LOG_FILENAME, when='D', interval=7)
-msg_logger = logging.getLogger('TCL')
-msg_logger.setLevel(logging.INFO)
-msg_logger.addHandler(handler)
-msg_logger.propagate = False
-handler.setFormatter(formatter)
-
-handler = logging.handlers.TimedRotatingFileHandler(DB_LOG_FILENAME, when='D', interval=7)
-db_logger = logging.getLogger('DB')
-db_logger.setLevel(logging.INFO)
-db_logger.addHandler(handler)
-db_logger.propagate = False
-handler.setFormatter(formatter)
+from config import *
 
 # DB
 db = PostgresqlExtDatabase('postgres', user='tcl', password='tcl', host="localhost", port=5432, autoconnect=True)
@@ -80,7 +56,7 @@ class Message(BaseModel):
     chat_id = ForeignKeyField(Chat, field='id', backref='messages', db_column='chat_id')
     state = IntegerField()
     content = TextField(null=True)
-    media = BlobField(null=True)
+    media = TextField(null=True)
 
     class Meta:
         db_table = 'message'
