@@ -18,6 +18,7 @@ async def new_message(event):
     message_id = str(message['id'])
     message_date = message['date'].strftime("%Y-%m-%d %H:%M:%S")
     chat_id = event.message.chat_id
+    filename = None
     if event.message.media:
         filename = await client.download_media(event.message)
         shutil.move(filename, dirlist['media'])
@@ -41,6 +42,7 @@ async def message_edited(event):
     message_id = str(message['id'])
     message_date = message['date']
     chat_id = event.message.chat_id
+    filename = None
     if event.message.media:
         filename = await client.download_media(event.message)
         shutil.move(filename, dirlist['media'])
