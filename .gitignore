@@ -1,0 +1,13 @@
+*.log
+schema.db
+*.session
+/.idea
+__pycache__
+/.git
+config.ini
+*.session
+/.vscode
+
+/Front/telega/node_modules
+/Front/telega/dist
+/media
