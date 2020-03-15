@@ -39,12 +39,12 @@ def token_required(f):
 def hello():
     return "123"
 
-@app.route('/say')
+@app.route('/say/')
 @token_required
 def index(user):
     return f"Hi {user.username}!"
 
-@app.route('/chats', methods=['GET'])
+@app.route('/chats/', methods=['GET'])
 @token_required
 def chats(user):
     Chat.select()
@@ -54,16 +54,16 @@ def chats(user):
 @app.route('/chats/<string:chat_id>/messages/', methods=['GET'])
 @token_required
 def messages(user, chat_id):
-    allMessages = [model_to_dict(message) for message in Message.select()] # .where(Message.chat == chat_id & Message.state == 1)
-    return jsonify({'Message':'Success', 'Messages': allMessages}) 
+    allMessages = [model_to_dict(message) for message in Message.select().where((Message.chat_id == chat_id) & (Message.version == 0)).order_by(Message._create_at)]
+    return jsonify({'Message':'Success', 'Messages': allMessages})
 
-@app.route('/chats/<string:chat_id>/messages/<string:message_id>/history', methods=['GET'])
+@app.route('/chats/<string:chat_id>/messages/<string:message_id>/history/', methods=['GET'])
 @token_required
 def history(user, chat_id, message_id):
-    history = [model_to_dict(message) for message in Message.select().where(Message.id == message_id)] 
+    history = [model_to_dict(message) for message in Message.select().where((Message.id == message_id) & (Message.chat_id == chat_id)).order_by(Message.version)] 
     return jsonify({'Message':'Success', 'History': history}) 
 
-@app.route('/create', methods=['POST'])
+@app.route('/create/', methods=['POST'])
 def create():
     data = request.get_json()
     if ('username' not in data.keys() or 'password' not in data.keys()):
@@ -82,7 +82,7 @@ def create():
     return jsonify({'message': 'successful'}), 200
 
 
-@app.route('/login', methods=['POST'])
+@app.route('/login/', methods=['POST'])
 def login():
     data = request.get_json()
     if ('username' not in data.keys() or 'password' not in data.keys()):  # Need wrapper

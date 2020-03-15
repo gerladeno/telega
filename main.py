@@ -76,8 +76,7 @@ async def message_deleted(event):
         db.close()
 
 
-if __name__ == "__main__":
-
+if __name__ == "__main__":    
     client.start()
     logging.info(u'Connected')
     # Get chats
@@ -93,5 +92,5 @@ if __name__ == "__main__":
     logging.info(u'Chats exported to DB')
     all_messages = Messages()
     logging.info(u'All messages inited')
-
+    print("started")
     client.run_until_disconnected()
