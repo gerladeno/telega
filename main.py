@@ -5,6 +5,7 @@ from datetime import datetime
 
 import shutil
 
+
 # TODO rework file links
 # TODO rework front completely
 # TODO get old messages
@@ -76,7 +77,7 @@ async def message_deleted(event):
         db.close()
 
 
-if __name__ == "__main__":    
+if __name__ == "__main__":
     client.start()
     logging.info(u'Connected')
     # Get chats

@@ -28,6 +28,12 @@ except Exception:
     username = 'Telegram Chat Listener'
     chat_names = ("Telegram", "Рынки Деньги Власть | РДВ", "MarketTwits")
     dirlist = {'logs': "logs", 'media': "media"}
+    proxy_site = 'proxy.mtproto.co'
+    proxy_port = 443
+    proxy_secret = '11112222333344445555666677778888'
+    db_host = 'localhost'
+    db_user = 'tcl'
+    db_password = 'tcl'
 
 for directory in dirlist:
     if not os.path.exists(dirlist[directory]):
