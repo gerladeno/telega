@@ -3,10 +3,12 @@ from playhouse.shortcuts import model_to_dict, dict_to_model
 import jwt
 from datetime import datetime, timedelta
 from functools import wraps
+# from flask_cors import CORS
 from DB.my_objects import *
 import json
 
 app = Flask(__name__)
+# CORS(app, methods=['GET', 'POST'])
 app.config["SECRET_KEY"] = "thisissecretkey"
 
 
@@ -82,7 +84,7 @@ def create():
     return jsonify({'message': 'successful'}), 200
 
 
-@app.route('/login/', methods=['POST'])
+@app.route('/login', methods=['POST'])
 def login():
     data = request.get_json()
     if ('username' not in data.keys() or 'password' not in data.keys()):  # Need wrapper
@@ -104,9 +106,6 @@ def login():
     },
     app.config['SECRET_KEY']
     )
-
-
-
     return jsonify({'message': 'Successful', 'token': token.decode('UTF-8')})
 
 
