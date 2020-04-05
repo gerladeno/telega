@@ -26,7 +26,7 @@ except Exception:
     api_id = 1033718
     api_hash = '4752738f1f604ad5d1878ce1cd2de907'
     username = 'Telegram Chat Listener'
-    chat_names = ("Telegram", "Рынки Деньги Власть | РДВ", "MarketTwits")
+    chat_names = ("Telegram", "MarketTwits")
     dirlist = {'logs': "logs", 'media': "media"}
     proxy_site = 'proxy.mtproto.co'
     proxy_port = 443
