@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+    <script src="{{url_for('static', filename='static/jquery-3.2.1.min.js')}}"></script>
+    <script src="{{url_for('static', filename='static/jquery.timeago.min.js')}}"></script>
+    <script src="{{url_for('static', filename='static/materialize.js')}}"></script>
+    <script src="{{url_for('static', filename='static/init.js')}}"></script>
+    <title>{{name}}</title>
+    <style>
+.mid {
+width: 50%;
+margin-left: 25%;
+background: #d1c4e9;
+}
+.scroll_left {
+position: fixed;
+overflow: auto;
+height: 100%;
+width:25%;
+will-change: transform;
+backface-visibility: hidden;
+padding-left: 0;
+}
+.click_here {
+font-style: italic;
+color: #303f9f;
+}
+.collapsible-header {
+display: block;
+}
+    </style>
+</head>
+<body>
+<div class="navbar-fixed">
+    <nav>
+        <div class="nav-wrapper deep-purple darken-4">
+            <a href="/" class="brand-logo">Telegram Chat Listener</a>
+            <ul id="nav-mobile" class="right hide-on-med-and-down">
+                <li><a href="/">Main</a></li>
+                <li><a href="logs/">Logs</a></li>
+            </ul>
+        </div>
+    </nav>
+</div>
+<div class="col scroll_left">
+    {% for chat in monitored %}
+    <a href="?chat={{chat}}" class="waves-effect waves-light btn indigo darken-3"><span>{{monitored[chat]}}</span></a>
+    <br>
+    {% endfor %}
+</div>
+<div class="col mid">
+
+
+    {% if chat_messages %}
+    <ul class="collapsible">
+        {% for message in chat_messages[::-1] %}
+        {% if message.state == 0 %}
+        <li class="card indigo">
+            <div class="card-content white-text">
+                <span class="card-title">{{message._create_at}}</span>
+                <div class="card-action indigo">{{message.content}}</div>
+            </div>
+        </li>
+        {% elif message[0].version == 0 %}
+        <li class="card indigo">
+            <div class="collapsible-header indigo card-content white-text">
+                <div class="card-title">{{message[0]._create_at}}</div>
+                <div class="card-action indigo lighten-1">{{message[0].content}}
+                    <div class="click_here" align="right">Click to view message history</div>
+                </div>
+            </div>
+            <div class="collapsible-body">
+                {% for msg in message[::-1] %}
+                <div class="card-content white-text">
+                <span class="card-title">{{msg._modified_at}} Version: {{msg.version}}.
+                    State: {{msg.state}}</span>
+                    <div class="card-action indigo">{{msg.content}}</div>
+                </div>
+                <br>
+                {% endfor %}
+            </div>
+        </li>
+        {% endif %}
+        {% endfor %}
+    </ul>
+    {% else %}
+    <div class="card indigo">
+        <div class="card-content white-text">
+            <span class="card-title"></span>
+            <p>Choose chat to view messages</p>
+        </div>
+    </div>
+    {% endif %}
+    </ul>
+</div>
+</body>
+</html>

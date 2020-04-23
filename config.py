@@ -13,6 +13,7 @@ try:
     api_id = config['Telegram']['api_id']
     api_hash = config['Telegram']['api_hash']
     username = config['Telegram']['username']
+    password = config['Telegram']['password']
     chat_names = ast.literal_eval(config['Chat']['monitored'])
     dirlist = ast.literal_eval(config['Dirs']['List'])
     proxy_site = config['Proxy']['site']
@@ -26,6 +27,7 @@ except Exception:
     api_id = 1033718
     api_hash = '4752738f1f604ad5d1878ce1cd2de907'
     username = 'Telegram Chat Listener'
+    password = None
     chat_names = ("Telegram", "MarketTwits")
     dirlist = {'logs': "logs", 'media': "media"}
     proxy_site = 'proxy.mtproto.co'
@@ -65,7 +67,7 @@ handler.setFormatter(formatter)
 
 # Set connection
 
-if 'USER' in os.environ and os.environ['USER'] == 'root':
+if 'USER' in os.environ and os.environ['USER'] == 'tcl':
     client = TelegramClient(username, api_id, api_hash)
     logging.info(u'Connecting directly')
 else:

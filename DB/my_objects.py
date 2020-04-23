@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timedelta
 from peewee import *
 from playhouse.postgres_ext import PostgresqlExtDatabase
 from config import *
@@ -70,11 +70,14 @@ class Message(BaseModel):
     def modify(self):
         self.state = 1
         self.version = self.version + 1
+        self._modified_at = datetime.now()
         self.save()
 
     def delete_(self):
         self.state = 2
+        self._modified_at = datetime.now()
         self.save()
+
 
 class CUser(BaseModel):
     rowid = IntegerField(unique=True, primary_key=True)
@@ -82,12 +85,14 @@ class CUser(BaseModel):
     password = TextField()
     is_active = BooleanField()
     is_telegramm_auth = BooleanField()
+
     class Meta:
         indexes = (
             (('username', 'password'), True),
         )
 
+
 class CToken(BaseModel):
     rowid = IntegerField(unique=True, primary_key=True)
-    user = ForeignKeyField(CUser, backref = 'tokens'),
+    user = ForeignKeyField(CUser, backref='tokens'),
     token = TextField()
