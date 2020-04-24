@@ -9,11 +9,10 @@
     <meta charset="UTF-8">
     <title>Title</title>
 </head>
-</head>
 <div class="navbar-fixed">
   <nav>
-    <div class="nav-wrapper">
-      <a href="#" class="brand-logo">List of logs</a>
+    <div class="nav-wrapper deep-purple darken-4">
+      <a href="/" class="brand-logo">List of logs</a>
       <ul id="nav-mobile" class="right hide-on-med-and-down">
             <li><a href="/">Main</a></li>
             <li><a href="logs/">Logs</a></li>
@@ -24,7 +23,7 @@
 <body>
             <div>
                 {% for file in log_files %}
-                <a href="file://{{path}}/{{file}}" class="external"><span>{{file}}</span></a>
+                <a href="/file/?file={{file}}" class="external"><span>{{file}}</span></a>
                 <br>
                 {% endfor %}
             </div>

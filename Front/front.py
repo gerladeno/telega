@@ -1,5 +1,5 @@
 import DB.data_access as my_objects
-from flask import Flask, render_template, request, url_for
+from flask import Flask, render_template, request, url_for, send_file
 import configparser
 import ast
 import logging
@@ -27,17 +27,18 @@ chat_names = ast.literal_eval(config['Chat']['monitored'])
 @app.route('/')
 def crutch():
     monitored_chat_id = request.args.get('chat', default=0, type=str)
-    viewed_message_id = request.args.get('msg', default=0, type=str)
     monitors = my_objects.Chats.get_monitored()
-    all_messages = my_objects.Messages.get_all_messages()
+    all_messages = my_objects.Messages.get_sorted_messages(7)
     chat_messages = []
-    message_versions = []
+    msg_list = []
     for message in all_messages:
         if message.chat_id_id == monitored_chat_id:
             if message.state == 0:
                 chat_messages.append(message)
-            else:
+                msg_list.append(message.id)
+            elif message.id not in msg_list:
                 tmp = []
+                msg_list.append(message.id)
                 for msg in all_messages:
                     if msg.id == message.id:
                         tmp.append(msg)
@@ -53,6 +54,13 @@ def logs():
     path = os.path.abspath('logs')
     template_context = dict(log_files=log_files, path=path)
     return render_template('logs.html', **template_context)
+
+
+@app.route('/file/')
+def file():
+    name = request.args.get('file', default=0, type=str)
+    filename = os.path.join('../logs/', name)
+    return send_file(filename, as_attachment=True)
 
 
 app.run(host='0.0.0.0')

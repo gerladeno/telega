@@ -11,6 +11,7 @@
     <style>
 .mid {
 width: 50%;
+<<<<<<< HEAD
 margin-left: 300px;
 }
 
@@ -21,11 +22,50 @@ margin-left: 300px;
 <div class="sidenav sidenav-fixed">
     {% for chat in monitored %}
     <a href="?chat={{chat}}" class="waves-effect waves-light btn"><span>{{monitored[chat]}}</span></a>
+=======
+margin-left: 25%;
+background: #d1c4e9;
+}
+.scroll_left {
+position: fixed;
+overflow: auto;
+height: 100%;
+width:25%;
+will-change: transform;
+backface-visibility: hidden;
+padding-left: 0;
+}
+.click_here {
+font-style: italic;
+color: #303f9f;
+}
+.collapsible-header {
+display: block;
+}
+    </style>
+</head>
+<body>
+<div class="navbar-fixed">
+    <nav>
+        <div class="nav-wrapper deep-purple darken-4">
+            <a href="/" class="brand-logo">Telegram Chat Listener</a>
+            <ul id="nav-mobile" class="right hide-on-med-and-down">
+                <li><a href="/">Main</a></li>
+                <li><a href="logs/">Logs</a></li>
+            </ul>
+        </div>
+    </nav>
+</div>
+<div class="col scroll_left">
+    {% for chat in monitored %}
+    <a href="?chat={{chat}}" class="waves-effect waves-light btn indigo darken-3"><span>{{monitored[chat]}}</span></a>
+>>>>>>> 5de1360a4b28a6c8033de705fca474034ba1c746
     <br>
     {% endfor %}
 </div>
 <div class="col mid">
 
+<<<<<<< HEAD
     <div class="navbar-fixed">
         <nav>
             <div class="nav-wrapper">
@@ -37,11 +77,14 @@ margin-left: 300px;
             </div>
         </nav>
     </div>
+=======
+>>>>>>> 5de1360a4b28a6c8033de705fca474034ba1c746
 
     {% if chat_messages %}
     <ul class="collapsible">
         {% for message in chat_messages[::-1] %}
         {% if message.state == 0 %}
+<<<<<<< HEAD
         <li class="card blue-grey darken-1">
             <div class="card-content white-text">
                 <span class="card-title">{{message._create_at}}</span>
@@ -54,14 +97,35 @@ margin-left: 300px;
                 <span class="card-title">{{message[0]._create_at}}</span>
                 <div class="card-action">{{message[0].content}}
                     <br>Click to view message history</div>
+=======
+        <li class="card indigo">
+            <div class="card-content white-text">
+                <span class="card-title">{{message._create_at}}</span>
+                <div class="card-action indigo">{{message.content}}</div>
+            </div>
+        </li>
+        {% elif message[0].version == 0 %}
+        <li class="card indigo">
+            <div class="collapsible-header indigo card-content white-text">
+                <div class="card-title">{{message[0]._create_at}}</div>
+                <div class="card-action indigo lighten-1">{{message[0].content}}
+                    <div class="click_here" align="right">Click to view message history</div>
+                </div>
+>>>>>>> 5de1360a4b28a6c8033de705fca474034ba1c746
             </div>
             <div class="collapsible-body">
                 {% for msg in message[::-1] %}
                 <div class="card-content white-text">
                 <span class="card-title">{{msg._modified_at}} Version: {{msg.version}}.
                     State: {{msg.state}}</span>
+<<<<<<< HEAD
                 <div class="card-action">{{msg.content}}</div>
                 </div>
+=======
+                    <div class="card-action indigo">{{msg.content}}</div>
+                </div>
+                <br>
+>>>>>>> 5de1360a4b28a6c8033de705fca474034ba1c746
                 {% endfor %}
             </div>
         </li>
@@ -69,7 +133,11 @@ margin-left: 300px;
         {% endfor %}
     </ul>
     {% else %}
+<<<<<<< HEAD
     <div class="card blue-grey darken-1">
+=======
+    <div class="card indigo">
+>>>>>>> 5de1360a4b28a6c8033de705fca474034ba1c746
         <div class="card-content white-text">
             <span class="card-title"></span>
             <p>Choose chat to view messages</p>

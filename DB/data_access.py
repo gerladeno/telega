@@ -39,6 +39,18 @@ class Messages:
             messages.append(msg)
         return messages
 
+    @staticmethod
+    def get_sorted_messages(days=7):
+        messages = []
+        dt = datetime.now() - timedelta(days=days)
+        q = Message\
+            .select()\
+            .where(Message._modified_at >= dt)\
+            .order_by(Message._modified_at.asc(), Message.version.asc())
+        for item in q:
+            messages.append(item)
+        return messages
+
 
 class Chats:
     chats = []
