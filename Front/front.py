@@ -15,8 +15,7 @@ logging.basicConfig(format=u'%(levelname)-8s [%(asctime)s] %(message)s', level=l
 
 # Init
 # Flask
-app = Flask(__name__, template_folder="./Front/test/", static_folder="./Front/test/")
-app.config["SECRET_KEY"] = "thisissecretkey"
+app = Flask(__name__, template_folder="resources/", static_folder="resources/")
 
 config = configparser.ConfigParser()
 config.read("config.ini")
@@ -34,14 +33,18 @@ def crutch():
     chat_messages = []
     message_versions = []
     for message in all_messages:
-        if message.chat_id_id == monitored_chat_id and message.version == 0:
-            chat_messages.append(message)
-    for message in all_messages:
-        if message.id == viewed_message_id:
-            message_versions.append(message)
-    template_context = dict(name=username, chat_messages=chat_messages, message_versions=message_versions,
-                            monitored=monitors)
-    return render_template('index.html', **template_context)
+        if message.chat_id_id == monitored_chat_id:
+            if message.state == 0:
+                chat_messages.append(message)
+            else:
+                tmp = []
+                for msg in all_messages:
+                    if msg.id == message.id:
+                        tmp.append(msg)
+                chat_messages.append(tmp)
+    template_context = dict(name=username, chat_messages=chat_messages, monitored=monitors)
+    page = render_template('index.html', **template_context)
+    return page
 
 
 @app.route('/logs/')

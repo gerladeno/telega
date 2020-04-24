@@ -1,5 +1,4 @@
 from peewee import PeeweeException
-from telethon import TelegramClient, connection, events
 from DB.data_access import *
 from datetime import datetime
 
@@ -8,7 +7,6 @@ import shutil
 
 # TODO rework file links
 # TODO rework front completely
-# TODO get old messages
 
 # Listeners
 @client.on(events.NewMessage(chats=chat_names))
@@ -52,7 +50,7 @@ async def message_edited(event):
     try:
         msg = Message.create(id=message_id, version=0, user_id=user_id, _modified_at=message_date,
                              _create_at=message_date,
-                             chat_id=chat_id, state=0, content=message_text, media=filename)
+                             chat_id=chat_id, state=1, content=message_text, media=filename)
         all_messages.modify(msg)
     except PeeweeException:
         db_logger.error(u'Failed to edit message. Id :{}, error:{}'.format(message_id, str(PeeweeException)))
@@ -78,7 +76,7 @@ async def message_deleted(event):
 
 
 if __name__ == "__main__":
-    client.start()
+    client.start(password=password)
     logging.info(u'Connected')
     # Get chats
     chats = {}

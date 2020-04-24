@@ -1,0 +1,6 @@
+telethon
+peewee
+PyJWT
+flask
+psycopg2-binary
+flask-cors
