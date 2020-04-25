@@ -12,5 +12,6 @@ COPY requirements /opt/tcl/
 
 RUN pip install --no-cache-dir -r requirements
 ENV PYTHONPATH /opt/tcl/
+ENV ISPROD TRUE
 
 CMD ["python","./Front/front.py"]

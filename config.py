@@ -67,7 +67,7 @@ handler.setFormatter(formatter)
 
 # Set connection
 
-if 'USER' in os.environ and os.environ['USER'] == 'tcl':
+if 'USER' in os.environ and os.environ['ISPROD'] == 'TRUE':
     client = TelegramClient(username, api_id, api_hash)
     logging.info(u'Connecting directly')
 else:

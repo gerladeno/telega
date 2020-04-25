@@ -16,5 +16,6 @@ COPY ${src} ${target}
 
 RUN pip install --no-cache-dir -r requirements
 ENV PYTHONPATH /opt/tcl/
+ENV ISPROD TRUE
 
 CMD ["python","./listener/main.py"]
