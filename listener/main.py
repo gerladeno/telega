@@ -5,6 +5,7 @@ from datetime import datetime
 import shutil
 
 
+# TODO docker-compose
 # TODO rework file storage (not in the container)
 # TODO rework front (Max)
 # TODO place config outside of containers
