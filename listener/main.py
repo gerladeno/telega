@@ -5,8 +5,12 @@ from datetime import datetime
 import shutil
 
 
-# TODO rework file links
-# TODO rework front completely
+# TODO rework file storage (not in the container)
+# TODO rework front (Max)
+# TODO place config outside of containers
+# TODO share logs
+# TODO create a page with system information
+# TODO editing configs via UI
 
 # Listeners
 @client.on(events.NewMessage(chats=chat_names))
