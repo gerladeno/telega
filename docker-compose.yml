@@ -1,0 +1,33 @@
+version: '3'
+services:
+  postgres:
+    build: ./DB/
+    container_name: postgres
+    ports:
+    - 5432:5432
+    volumes:
+    - postgres:/var/lib/postgresql/data/
+  app:
+    build:
+      dockerfile: ./listener/Dockerfile
+      context: .
+    container_name: tcl
+    ports:
+    - 80:80
+    volumes:
+    - logs:/opt/tcl/logs
+    links:
+      - postgres:db
+  front:
+    build:
+      dockerfile: ./Front/Dockerfile
+      context: .
+    ports:
+    - 5000:5000
+    volumes:
+    - logs:/opt/tcl/logs
+    links:
+      - postgres:db
+volumes:
+  postgres:
+  logs:
