@@ -81,3 +81,7 @@ else:
         proxy=(proxy_site, proxy_port, proxy_secret)
     )
     logging.info(u'Connecting via MTProxy')
+
+if __name__ == "__main__":
+    client.start(password=password)
+    logging.info(u'Connected')
