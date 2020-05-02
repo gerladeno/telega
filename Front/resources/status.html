@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+    <script src="{{url_for('static', filename='static/jquery-3.2.1.min.js')}}"></script>
+    <script src="{{url_for('static', filename='static/jquery.timeago.min.js')}}"></script>
+    <script src="{{url_for('static', filename='static/materialize.js')}}"></script>
+    <script src="{{url_for('static', filename='static/init.js')}}"></script>
+    <style>
+  .code {
+    border:1px solid;
+    overflow:auto;
+    outline:none;
+    resize:none;
+  }
+
+
+
+    </style>
+    <title>Stats</title>
+</head>
+<body>
+<div class="navbar-fixed">
+    <nav>
+        <div class="nav-wrapper deep-purple darken-4">
+            <a href="/" class="brand-logo">Telegram Chat Listener</a>
+            <ul id="nav-mobile" class="right hide-on-med-and-down">
+                <li><a href="/">Main</a></li>
+                <li><a href="/status/">Status</a></li>
+                <li><a href="/logs/">Logs</a></li>
+            </ul>
+        </div>
+    </nav>
+</div>
+
+<div class="">
+    <ul class="collapsible">
+        <li>
+            <h5 class="collapsible-header">Configs</h5>
+            <div class="collapsible-body">
+                {% for item in config %}
+                <h6>{{item}}</h6>
+                {% for element in config[item] %}
+                {{element}} = {{config[item][element]}}
+                <br>
+                {% endfor %}
+                {% endfor %}
+            </div>
+        </li>
+        <li>
+            <h5 class="collapsible-header">Messages</h5>
+            <div class="collapsible-body">
+                {% for item in db_stats %}
+                <p>{{item}}</p>
+                {% endfor %}
+            </div>
+        </li>
+        <li>
+            <h5 class="collapsible-header">Volumes</h5>
+            <div class="collapsible-body">
+                {% for vol in volumes %}
+                <h6>{{vol}}:</h6>
+                <div class="code">
+                    <pre>{{inspect[vol]}}</pre>
+                </div>
+                {% endfor %}
+            </div>
+        </li>
+    </ul>
+</div>
+</body>
+</html>

@@ -1,9 +1,9 @@
 import DB.data_access as my_objects
 from flask import Flask, render_template, request, url_for, send_file
-import configparser
-import ast
 import logging
 import os
+import subprocess
+import json
 
 FRONT_LOG_FILENAME = u'logs/front.log'
 
@@ -22,7 +22,7 @@ app = Flask(__name__, template_folder="resources/", static_folder="resources/")
 def main():
     monitored_chat_id = request.args.get('chat', default=0, type=str)
     monitors = my_objects.Chats.get_monitored()
-    all_messages = my_objects.Messages.get_sorted_messages(7)
+    all_messages = my_objects.Messages.get_sorted_messages(days=my_objects.days)
     chat_messages = []
     msg_list = []
     for message in all_messages:
@@ -55,6 +55,33 @@ def file():
     name = request.args.get('file', default=0, type=str)
     filename = os.path.join('../logs/', name)
     return send_file(filename, as_attachment=True)
+
+
+@app.route('/status/')
+def status():
+    df = ''
+    volumes = []
+    top = ''
+    inspect = ''
+    # df = subprocess.check_output('df -h', shell=True)
+    # top = subprocess.check_output('top -b -n 1', shell=True)
+    # volumes = subprocess.check_output('docker volume ls -q', shell=True).splitlines()
+    # volumes = [a.decode() for a in volumes]
+    # inspect = {}
+    # for v in volumes:
+    #     inspect[v] = json.dumps(json.loads(subprocess.check_output("docker volume inspect {}".format(v), shell=True)),
+    #                             indent=2)
+
+    # Config
+    config = my_objects.config._sections.copy()
+    config.pop('Telegram')
+    config.pop('DB')
+
+    # DB
+    db_stats = my_objects.Messages.get_statistics()
+
+    template_context = dict(df=df, top=top, volumes=volumes, inspect=inspect, config=config, db_stats=db_stats)
+    return render_template('status.html', **template_context)
 
 
 app.run(host='0.0.0.0')

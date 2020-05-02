@@ -7,8 +7,6 @@ import shutil
 
 # TODO store media in DB
 # TODO rework front (Max)
-# TODO share logs
-# TODO create a page with system information
 # TODO editing configs via UI (with Max)
 
 # Listeners

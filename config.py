@@ -23,6 +23,7 @@ try:
     db_host = config['DB']['host']
     db_user = config['DB']['user']
     db_password = config['DB']['password']
+    days = int(config['Front']['days_to_display'])
 except Exception:
     logging.warning(u'No config file with proper settings found. Starting with default settings')
     api_id = 1033718
@@ -38,6 +39,7 @@ except Exception:
     db_host = 'localhost'
     db_user = 'tcl'
     db_password = 'tcl'
+    days = 7
 
 for directory in dirlist:
     if not os.path.exists(dirlist[directory]):

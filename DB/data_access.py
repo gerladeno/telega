@@ -1,5 +1,6 @@
 from DB.my_objects import *
 
+
 class Messages:
     messages = []
 
@@ -43,13 +44,25 @@ class Messages:
     def get_sorted_messages(days=7):
         messages = []
         dt = datetime.now() - timedelta(days=days)
-        q = Message\
-            .select()\
-            .where(Message._modified_at >= dt)\
+        q = Message \
+            .select() \
+            .where(Message._modified_at >= dt) \
             .order_by(Message._modified_at.asc(), Message.version.asc())
         for item in q:
             messages.append(item)
         return messages
+
+    @staticmethod
+    def get_statistics():
+        chats = []
+        q = Message \
+            .select(Message.chat_id, fn.COUNT(Message.id).alias('Msg_count')) \
+            .where(Message.version == 0) \
+            .group_by(Message.chat_id_id)
+
+        for item in q:
+            chats.append([item.chat_id.name, item.Msg_count])
+        return chats
 
 
 class Chats:
