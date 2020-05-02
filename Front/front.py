@@ -13,19 +13,13 @@ for handler in logging.root.handlers[:]:
 logging.basicConfig(format=u'%(levelname)-8s [%(asctime)s] %(message)s', level=logging.INFO,
                     filename=FRONT_LOG_FILENAME)
 
-# Init
-# Flask
+# Init Flask
 app = Flask(__name__, template_folder="resources/", static_folder="resources/")
-
-config = configparser.ConfigParser()
-config.read("config.ini")
-username = config['Telegram']['username']
-chat_names = ast.literal_eval(config['Chat']['monitored'])
 
 
 # Generate and display main page
 @app.route('/')
-def crutch():
+def main():
     monitored_chat_id = request.args.get('chat', default=0, type=str)
     monitors = my_objects.Chats.get_monitored()
     all_messages = my_objects.Messages.get_sorted_messages(7)
@@ -43,7 +37,7 @@ def crutch():
                     if msg.id == message.id:
                         tmp.append(msg)
                 chat_messages.append(tmp)
-    template_context = dict(name=username, chat_messages=chat_messages, monitored=monitors)
+    template_context = dict(name=my_objects.username, chat_messages=chat_messages, monitored=monitors)
     page = render_template('index.html', **template_context)
     return page
 

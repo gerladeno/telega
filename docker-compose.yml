@@ -15,19 +15,24 @@ services:
     ports:
     - 80:80
     volumes:
-    - logs:/opt/tcl/logs
+    - logs:/opt/tcl/logs/
+    - media:/opt/tcl/media/
+    - ./config/:/opt/tcl/config/
     links:
       - postgres:db
   front:
     build:
       dockerfile: ./Front/Dockerfile
       context: .
+    container_name: front
     ports:
     - 5000:5000
     volumes:
-    - logs:/opt/tcl/logs
+    - logs:/opt/tcl/logs/
+    - ./config/:/opt/tcl/config/
     links:
       - postgres:db
 volumes:
   postgres:
   logs:
+  media:

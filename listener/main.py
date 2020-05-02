@@ -5,12 +5,11 @@ from datetime import datetime
 import shutil
 
 
-# TODO rework file storage (not in the container)
+# TODO store media in DB
 # TODO rework front (Max)
-# TODO place config outside of containers
 # TODO share logs
 # TODO create a page with system information
-# TODO editing configs via UI
+# TODO editing configs via UI (with Max)
 
 # Listeners
 @client.on(events.NewMessage(chats=chat_names))
@@ -82,11 +81,19 @@ async def message_deleted(event):
 if __name__ == "__main__":
     client.start(password=password)
     logging.info(u'Connected')
+
     # Get chats
     chats = {}
     for chat in client.iter_dialogs():
         chats[str(chat.id)] = chat.name
     logging.info(u'Chats loaded from tg')
+
+    # Check if all monitors are in chats
+    for chat in chat_names:
+        if chat not in chats.values():
+            logging.warning(u'Chat {chat} was not found in all chats. Removed from monitored.')
+            chat_names.remove(chat)
+
     # Init schema and get messages
     init()
     logging.info(u'Schema inited')

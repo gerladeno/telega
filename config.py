@@ -9,13 +9,14 @@ from telethon import TelegramClient, connection, events
 config = configparser.ConfigParser()
 
 try:
-    config.read("config.ini")
+    config.read("./config/config.ini")
     api_id = config['Telegram']['api_id']
     api_hash = config['Telegram']['api_hash']
     username = config['Telegram']['username']
     password = config['Telegram']['password']
     chat_names = ast.literal_eval(config['Chat']['monitored'])
     dirlist = ast.literal_eval(config['Dirs']['List'])
+    env = config['Proxy']['env']
     proxy_site = config['Proxy']['site']
     proxy_port = int(config['Proxy']['port'])
     proxy_secret = config['Proxy']['secret']
@@ -29,7 +30,8 @@ except Exception:
     username = 'Telegram Chat Listener'
     password = None
     chat_names = ("Telegram", "MarketTwits")
-    dirlist = {'logs': "logs", 'media': "media"}
+    dirlist = {'logs': "logs", 'media': "media", 'config': "config"}
+    env = 'dev'
     proxy_site = 'proxy.mtproto.co'
     proxy_port = 443
     proxy_secret = '11112222333344445555666677778888'
@@ -67,7 +69,7 @@ handler.setFormatter(formatter)
 
 # Set connection
 
-if 'USER' in os.environ and os.environ['ISPROD'] == 'TRUE':
+if env == 'PROD':
     client = TelegramClient(username, api_id, api_hash)
     logging.info(u'Connecting directly')
 else:

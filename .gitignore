@@ -4,7 +4,7 @@ schema.db
 /.idea
 __pycache__
 /.git
-config.ini
+config/config.ini
 *.session
 /.vscode
 

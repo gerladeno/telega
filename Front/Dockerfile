@@ -6,12 +6,10 @@ WORKDIR /opt/tcl/
 
 COPY DB/ /opt/tcl/DB/
 COPY Front/ /opt/tcl/Front/
-COPY config.ini /opt/tcl/
 COPY config.py /opt/tcl/
 COPY requirements /opt/tcl/
 
 RUN pip install --no-cache-dir -r requirements
 ENV PYTHONPATH /opt/tcl/
-ENV ISPROD TRUE
 
 CMD ["python","./Front/front.py"]
