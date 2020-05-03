@@ -13,3 +13,6 @@ config/config.ini
 /media
 /front/node_modules
 /web_ui/node_modules
+/venv
+/logs
+/media
