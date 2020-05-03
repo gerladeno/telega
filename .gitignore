@@ -8,11 +8,9 @@ config/config.ini
 *.session
 /.vscode
 
-/Front/telega/node_modules
-/Front/telega/dist
 /media
 /front/node_modules
 /web_ui/node_modules
 /venv
 /logs
-/media
+Front/media
