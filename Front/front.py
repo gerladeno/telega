@@ -57,12 +57,25 @@ def file():
     return send_file(filename, as_attachment=True)
 
 
+@app.route('/media/')
+def media():
+    name = request.args.get('media', default=0, type=str)
+    filename = os.path.join('../media/', name)
+    return send_file(filename, as_attachment=True)
+
+
 @app.route('/status/')
 def status():
     df = ''
     volumes = []
     top = ''
     inspect = ''
+    try:
+        du = {'logs': subprocess.check_output('du -d 0 -h /opt/tcl/logs/', shell=True),
+              'media': subprocess.check_output('du -d 0 -h /opt/tcl/media/', shell=True),
+              'postgres': subprocess.check_output('du -d 0 -h /var/lib/postgresql/data/', shell=True)}
+    except Exception:
+        du = {}
     # df = subprocess.check_output('df -h', shell=True)
     # top = subprocess.check_output('top -b -n 1', shell=True)
     # volumes = subprocess.check_output('docker volume ls -q', shell=True).splitlines()
@@ -80,7 +93,7 @@ def status():
     # DB
     db_stats = my_objects.Messages.get_statistics()
 
-    template_context = dict(df=df, top=top, volumes=volumes, inspect=inspect, config=config, db_stats=db_stats)
+    template_context = dict(df=df, top=top, volumes=volumes, inspect=inspect, config=config, db_stats=db_stats, du=du)
     return render_template('status.html', **template_context)
 
 

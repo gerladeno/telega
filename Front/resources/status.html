@@ -59,11 +59,9 @@
         <li>
             <h5 class="collapsible-header">Volumes</h5>
             <div class="collapsible-body">
-                {% for vol in volumes %}
-                <h6>{{vol}}:</h6>
-                <div class="code">
-                    <pre>{{inspect[vol]}}</pre>
-                </div>
+                {% for el in du %}
+                {{el}}: {{du[el].decode()[:-2].replace('\t',' ')}}
+                <br>
                 {% endfor %}
             </div>
         </li>

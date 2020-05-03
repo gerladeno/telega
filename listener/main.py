@@ -20,7 +20,8 @@ async def new_message(event):
     chat_id = event.message.chat_id
     filename = None
     if event.message.media:
-        filename = await client.download_media(event.message)
+        filename = str(chat_id) + '_' + message_id
+        filename = await client.download_media(event.message, filename)
         shutil.move(filename, dirlist['media'])
         msg_logger.info(u'Media {} saved successfully'.format(filename))
     msg_logger.info(u'New message created. Id: {}, content: {}'.format(message_id, message_text))
@@ -44,7 +45,8 @@ async def message_edited(event):
     chat_id = event.message.chat_id
     filename = None
     if event.message.media:
-        filename = await client.download_media(event.message)
+        filename = str(chat_id) + '_' + message_id
+        filename = await client.download_media(event.message, filename)
         shutil.move(filename, dirlist['media'])
         msg_logger.info(u'Media {} saved successfully'.format(filename))
     msg_logger.info(u'Message was edited. Id: {}, content: {}'.format(message_id, message_text))

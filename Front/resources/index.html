@@ -60,7 +60,12 @@ display: block;
         <li class="card indigo">
             <div class="card-content white-text">
                 <span class="card-title">{{message._create_at}}</span>
-                <div class="card-action indigo">{{message.content}}</div>
+                <div class="card-action indigo">{{message.content}}
+                    {% if message.media %}
+                    <br>
+                    Media content: <a href="/media/?media={{message.media}}" class="external"><span>{{message.media}}</span></a>
+                    {% endif %}
+                </div>
             </div>
         </li>
         {% elif message[0].version == 0 %}
@@ -68,6 +73,10 @@ display: block;
             <div class="collapsible-header indigo card-content white-text">
                 <div class="card-title">{{message[0]._create_at}}</div>
                 <div class="card-action indigo lighten-1">{{message[0].content}}
+                    {% if message[0].media %}
+                    <br>
+                    Media content: <a href="/media/?media={{message[0].media}}" class="external"><span>{{message[0].media}}</span></a>
+                    {% endif %}
                     <div class="click_here" align="right">Click to view message history</div>
                 </div>
             </div>
@@ -76,7 +85,12 @@ display: block;
                 <div class="card-content white-text">
                 <span class="card-title">{{msg._modified_at}} Version: {{msg.version}}.
                     State: {{msg.state}}</span>
-                    <div class="card-action indigo">{{msg.content}}</div>
+                    <div class="card-action indigo">{{msg.content}}
+                        {% if msg.media %}
+                        <br>
+                        Media content: <a href="/media/?media={{msg.media}}" class="external"><span>{{msg.media}}</span></a>
+                        {% endif %}
+                    </div>
                 </div>
                 <br>
                 {% endfor %}
