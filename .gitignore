@@ -5,7 +5,7 @@ schema.db
 __pycache__
 /.git
 config/config.ini
-*.session
+*.session*
 /.vscode
 
 /media
