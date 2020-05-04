@@ -3,7 +3,7 @@ from flask import Flask, render_template, request, url_for, send_file
 import logging
 import os
 import subprocess
-import json
+import re
 
 FRONT_LOG_FILENAME = u'logs/front.log'
 
@@ -64,6 +64,16 @@ def media():
     return send_file(filename, as_attachment=True)
 
 
+@app.context_processor
+def utility_processor():
+    def is_ext(name, extensions=('.jpg', '.jpeg', '.png', '.gif')):
+        for ext in extensions:
+            if re.search(ext + "$", name.lower()):
+                return True
+        return False
+    return dict(is_ext=is_ext)
+
+
 @app.route('/status/')
 def status():
     df = ''
@@ -76,14 +86,6 @@ def status():
               'postgres': subprocess.check_output('du -d 0 -h /var/lib/postgresql/data/', shell=True)}
     except Exception:
         du = {}
-    # df = subprocess.check_output('df -h', shell=True)
-    # top = subprocess.check_output('top -b -n 1', shell=True)
-    # volumes = subprocess.check_output('docker volume ls -q', shell=True).splitlines()
-    # volumes = [a.decode() for a in volumes]
-    # inspect = {}
-    # for v in volumes:
-    #     inspect[v] = json.dumps(json.loads(subprocess.check_output("docker volume inspect {}".format(v), shell=True)),
-    #                             indent=2)
 
     # Config
     config = my_objects.config._sections.copy()
