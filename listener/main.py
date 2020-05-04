@@ -91,7 +91,7 @@ if __name__ == "__main__":
     # Check if all monitors are in chats
     for chat in chat_names:
         if chat not in chats.values():
-            logging.warning(u'Chat {chat} was not found in all chats. Removed from monitored.')
+            logging.warning(u'Chat {} was not found in all chats. Removed from monitored.'.format(chat))
             chat_names.remove(chat)
 
     # Init schema and get messages
