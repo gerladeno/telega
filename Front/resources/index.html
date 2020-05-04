@@ -30,6 +30,9 @@ color: #303f9f;
 .collapsible-header {
 display: block;
 }
+.elem {
+max-width: 100%;
+}
     </style>
 </head>
 <body>
@@ -66,7 +69,7 @@ display: block;
                     Media content: <a href="/media/?media={{message.media}}" class="external">
                         {% if is_ext(message.media) %}
                         <br>
-                        <img src="/media/?media={{message.media}}">
+                        <img class="elem" src="/media/?media={{message.media}}">
                         {% else %}
                         <span>{{message.media}}</span>
                         {% endif %}
@@ -85,7 +88,7 @@ display: block;
                     Media content: <a href="/media/?media={{message[0].media}}" class="external">
                         {% if is_ext(message[0].media) %}
                         <br>
-                        <img src="/media/?media={{message[0].media}}">
+                        <img class="elem" src="/media/?media={{message[0].media}}">
                         {% else %}
                         <span>{{message[0].media}}</span>
                         {% endif %}
@@ -105,7 +108,7 @@ display: block;
                         Media content: <a href="/media/?media={{msg.media}}" class="external">
                             {% if is_ext(msg.media) %}
                             <br>
-                            <img src="/media/?media={{msg.media}}">
+                            <img class="elem" src="/media/?media={{msg.media}}">
                             {% else %}
                             <span>{{msg.media}}</span>
                             {% endif %}
