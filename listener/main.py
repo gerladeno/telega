@@ -5,7 +5,6 @@ from datetime import datetime
 import shutil
 
 
-# TODO store media in DB
 # TODO rework front (Max)
 # TODO editing configs via UI (with Max)
 
@@ -19,11 +18,13 @@ async def new_message(event):
     message_date = message['date'].strftime("%Y-%m-%d %H:%M:%S")
     chat_id = event.message.chat_id
     filename = None
-    if event.message.media:
+    if event.message.media and not event.message.media.poll:
         filename = str(chat_id) + '_' + message_id
         filename = await client.download_media(event.message, filename)
         shutil.move(filename, dirlist['media'])
         msg_logger.info(u'Media {} saved successfully'.format(filename))
+    elif event.message.media.poll:
+        message_text = message['media']['poll']['question'] + '\n' + 'SYSTEM: Note, this message will not be updated.'
     msg_logger.info(u'New message created. Id: {}, content: {}'.format(message_id, message_text))
     try:
         msg = Message.create(id=message_id, version=0, user_id=user_id, _modified_at=message_date,
@@ -38,26 +39,29 @@ async def new_message(event):
 @client.on(events.MessageEdited(chats=chat_names))
 async def message_edited(event):
     message = event.message.to_dict()
-    message_text = message['message']
-    user_id = str(message['from_id'])
-    message_id = str(message['id'])
-    message_date = message['date']
-    chat_id = event.message.chat_id
-    filename = None
-    if event.message.media:
-        filename = str(chat_id) + '_' + message_id
-        filename = await client.download_media(event.message, filename)
-        shutil.move(filename, dirlist['media'])
-        msg_logger.info(u'Media {} saved successfully'.format(filename))
-    msg_logger.info(u'Message was edited. Id: {}, content: {}'.format(message_id, message_text))
-    try:
-        msg = Message.create(id=message_id, version=0, user_id=user_id, _modified_at=message_date,
-                             _create_at=message_date,
-                             chat_id=chat_id, state=1, content=message_text, media=filename)
-        all_messages.modify(msg)
-    except PeeweeException:
-        db_logger.error(u'Failed to edit message. Id :{}, error:{}'.format(message_id, str(PeeweeException)))
-        db.close()
+
+    # to ignore polls. Is still in investigation
+    if message['via_bot_id'] != 129782279:
+        message_text = message['message']
+        user_id = str(message['from_id'])
+        message_id = str(message['id'])
+        message_date = message['date']
+        chat_id = event.message.chat_id
+        filename = None
+        if event.message.media:
+            filename = str(chat_id) + '_' + message_id
+            filename = await client.download_media(event.message, filename)
+            shutil.move(filename, dirlist['media'])
+            msg_logger.info(u'Media {} saved successfully'.format(filename))
+        msg_logger.info(u'Message was edited. Id: {}, content: {}'.format(message_id, message_text))
+        try:
+            msg = Message.create(id=message_id, version=0, user_id=user_id, _modified_at=message_date,
+                                 _create_at=message_date,
+                                 chat_id=chat_id, state=1, content=message_text, media=filename)
+            all_messages.modify(msg)
+        except PeeweeException:
+            db_logger.error(u'Failed to edit message. Id :{}, error:{}'.format(message_id, str(PeeweeException)))
+            db.close()
 
 
 @client.on(events.MessageDeleted())
