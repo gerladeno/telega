@@ -30,12 +30,11 @@ color: #303f9f;
 .collapsible-header {
 display: block;
 }
-.elem {
-max-width: 100%;
-}
 pre {
 white-space: pre-line;
 }
+
+
     </style>
 </head>
 <body>
@@ -66,17 +65,23 @@ white-space: pre-line;
         <li class="card indigo">
             <div class="card-content white-text">
                 <span class="card-title">{{message._create_at}}</span>
-                <div class="card-action indigo"><pre>{{message.content}}</pre>
+                <div class="card-action indigo">
+                    <pre>{{message.content}}</pre>
                     {% if message.media %}
                     <br>
-                    Media content: <a href="/media/?media={{message.media}}" class="external">
-                        {% if is_ext(message.media) %}
-                        <br>
-                        <img class="elem" src="/media/?media={{message.media}}">
-                        {% else %}
+                    Media content:
+                    {% if is_img(message.media) %}
+                    <br>
+                    <img class="materialboxed responsive-img" src="/media/?media={{message.media}}">
+                    {% elif is_vid(message.media) %}
+                    <video class="responsive-video" width="100%" controls>
+                        <source src="/media/?media={{message.media}}" type="video/mp4">
+                    </video>
+                    {% else %}
+                    <a href="/media/?media={{message.media}}" class="external">
                         <span>{{message.media}}</span>
-                        {% endif %}
                     </a>
+                    {% endif %}
                     {% endif %}
                 </div>
             </div>
@@ -85,17 +90,23 @@ white-space: pre-line;
         <li class="card indigo">
             <div class="collapsible-header indigo card-content white-text">
                 <div class="card-title">{{message[0]._create_at}}</div>
-                <div class="card-action indigo lighten-1"><pre>{{message[0].content}}</pre>
+                <div class="card-action indigo lighten-1">
+                    <pre>{{message[0].content}}</pre>
                     {% if message[0].media %}
                     <br>
-                    Media content: <a href="/media/?media={{message[0].media}}" class="external">
-                        {% if is_ext(message[0].media) %}
-                        <br>
-                        <img class="elem" src="/media/?media={{message[0].media}}">
-                        {% else %}
+                    Media content:
+                    {% if is_img(message[0].media) %}
+                    <br>
+                    <img class="materialboxed responsive-img" src="/media/?media={{message[0].media}}">
+                    {% elif is_vid(message[0].media) %}
+                    <video class="responsive-video" width="100%" controls>
+                        <source src="/media/?media={{message[0].media}}" type="video/mp4">
+                    </video>
+                    {% else %}
+                    <a href="/media/?media={{message[0].media}}" class="external">
                         <span>{{message[0].media}}</span>
-                        {% endif %}
                     </a>
+                    {% endif %}
                     {% endif %}
                     <div class="click_here" align="right">Click to view message history</div>
                 </div>
@@ -105,17 +116,23 @@ white-space: pre-line;
                 <div class="card-content white-text">
                 <span class="card-title">{{msg._modified_at}} Version: {{msg.version}}.
                     State: {{msg.state}}</span>
-                    <div class="card-action indigo"><pre>{{msg.content}}</pre>
+                    <div class="card-action indigo">
+                        <pre>{{msg.content}}</pre>
                         {% if msg.media %}
                         <br>
-                        Media content: <a href="/media/?media={{msg.media}}" class="external">
-                            {% if is_ext(msg.media) %}
-                            <br>
-                            <img class="elem" src="/media/?media={{msg.media}}">
-                            {% else %}
+                        Media content:
+                        {% if is_img(msg.media) %}
+                        <br>
+                        <img class="materialboxed responsive-img" src="/media/?media={{msg.media}}">
+                        {% elif is_vid(msg.media) %}
+                        <video class="responsive-video" width="100%" controls>
+                            <source src="/media/?media={{msg.media}}" type="video/mp4">
+                        </video>
+                        {% else %}
+                        <a href="/media/?media={{msg.media}}" class="external">
                             <span>{{msg.media}}</span>
-                            {% endif %}
                         </a>
+                        {% endif %}
                         {% endif %}
                     </div>
                 </div>

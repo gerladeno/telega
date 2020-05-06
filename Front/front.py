@@ -65,13 +65,23 @@ def media():
 
 
 @app.context_processor
-def utility_processor():
-    def is_ext(name, extensions=('.jpg', '.jpeg', '.png', '.gif')):
+def utility_processor1():
+    def is_img(name, extensions=('.jpg', '.jpeg', '.png', '.gif')):
         for ext in extensions:
             if re.search(ext + "$", name.lower()):
                 return True
         return False
-    return dict(is_ext=is_ext)
+    return dict(is_img=is_img)
+
+
+@app.context_processor
+def utility_processor2():
+    def is_vid(name, extensions=('.mp4',)):
+        for ext in extensions:
+            if re.search(ext + "$", name.lower()):
+                return True
+        return False
+    return dict(is_vid=is_vid)
 
 
 @app.route('/status/')
