@@ -4,6 +4,7 @@ import logging
 import logging.handlers
 import os
 from telethon import TelegramClient, connection, events
+from telethon.tl.functions.channels import JoinChannelRequest
 
 # Configs
 config = configparser.ConfigParser()
@@ -82,6 +83,20 @@ else:
     )
     logging.info(u'Connecting via MTProxy')
 
+# Join channels
+# from telethon.sync import TelegramClient, connection, events
+# ls = ['@Burovaia', '@internet_people', '@russianmacro', '@AK47pfl', '@breakingmash', '@banksta', '@trubapodneglinnoy',
+#       '@cbrstocks', '@boilerroomchannel']
+
+
+def join(channel):
+    channel_entity = client.get_entity(channel)
+    client(JoinChannelRequest(channel_entity))
+
+
 if __name__ == "__main__":
     client.start(password=password)
     logging.info(u'Connected')
+
+    # for item in ls:
+    #     join(item)
