@@ -1,6 +1,7 @@
 from peewee import PeeweeException
 from DB.data_access import *
 from datetime import datetime
+import filecmp
 
 import shutil
 
@@ -18,13 +19,16 @@ async def new_message(event):
     message_date = message['date'].strftime("%Y-%m-%d %H:%M:%S")
     chat_id = event.message.chat_id
     filename = None
-    if event.message.media and not event.message.media.poll:
-        filename = str(chat_id) + '_' + message_id
-        filename = await client.download_media(event.message, filename)
-        shutil.move(filename, dirlist['media'])
-        msg_logger.info(u'Media {} saved successfully'.format(filename))
-    elif event.message.media.poll:
-        message_text = message['media']['poll']['question'] + '\n' + 'SYSTEM: Note, this message will not be updated.'
+    if event.message.media:
+        if hasattr(event.message.media, 'poll'):
+            message_text = message['media']['poll'][
+                               'question'] + '\n' + 'SYSTEM: Note, this message will not be updated.'
+        else:
+            filename = str(chat_id) + '_' + message_id
+            filename = await client.download_media(event.message, filename)
+            filename = str(filename)
+            shutil.move(filename, dirlist['media'])
+            msg_logger.info(u'Media {} saved successfully'.format(filename))
     msg_logger.info(u'New message created. Id: {}, content: {}'.format(message_id, message_text))
     try:
         msg = Message.create(id=message_id, version=0, user_id=user_id, _modified_at=message_date,
@@ -51,7 +55,14 @@ async def message_edited(event):
         if event.message.media:
             filename = str(chat_id) + '_' + message_id
             filename = await client.download_media(event.message, filename)
-            shutil.move(filename, dirlist['media'])
+            filename = str(filename)
+            old_file = os.path.join(dirlist['media'], filename)
+            if os.path.isfile(old_file):
+                if filecmp.cmp(filename, old_file):
+                    os.remove(old_file)
+                    shutil.move(filename, dirlist['media'])
+                else:
+                    shutil.move(filename, dirlist['media'])
             msg_logger.info(u'Media {} saved successfully'.format(filename))
         msg_logger.info(u'Message was edited. Id: {}, content: {}'.format(message_id, message_text))
         try:
