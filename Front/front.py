@@ -38,6 +38,10 @@ def main():
                         tmp.append(msg)
                 chat_messages.append(tmp)
     template_context = dict(name=my_objects.username, chat_messages=chat_messages, monitored=monitors)
+    if monitored_chat_id != 0:
+        template_context['chat_name'] = (monitored_chat_id, monitors[monitored_chat_id])
+    else:
+        template_context['chat_name'] = (0, 'None')
     page = render_template('index.html', **template_context)
     return page
 
@@ -71,6 +75,7 @@ def utility_processor1():
             if re.search(ext + "$", name.lower()):
                 return True
         return False
+
     return dict(is_img=is_img)
 
 
@@ -81,6 +86,7 @@ def utility_processor2():
             if re.search(ext + "$", name.lower()):
                 return True
         return False
+
     return dict(is_vid=is_vid)
 
 

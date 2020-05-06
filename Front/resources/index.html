@@ -41,7 +41,11 @@ white-space: pre-line;
 <div class="navbar-fixed">
     <nav>
         <div class="nav-wrapper deep-purple darken-4">
+            {% if chat_name[1] == 'None' %}
             <a href="/" class="brand-logo">Telegram Chat Listener</a>
+            {% else %}
+            <a href="?chat={{chat_name[0]}}" class="brand-logo">{{chat_name[1]}}</a>
+            {% endif %}
             <ul id="nav-mobile" class="right hide-on-med-and-down">
                 <li><a href="/">Main</a></li>
                 <li><a href="/status/">Status</a></li>
