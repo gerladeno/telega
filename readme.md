@@ -13,7 +13,7 @@ To deploy:
 install docker, docker-compose
 create a directory
 git clone https://github.com/gerladeno/telega.git
-add config.ini to ./config/
+add config.ini to ./config/ (check config.py to see it's structure)
 run "python config.py" to estabilish connection (you'll have to enter your phone and code, and config.ini should include your password if you have 2-step verification)
 run "docker-compose up -d --build"
 check, that all 3 containers run "docker ps"
