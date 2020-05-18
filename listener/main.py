@@ -26,7 +26,7 @@ async def new_message(event):
         else:
             filename = os.path.join(dirlist['media'], str(chat_id) + '_' + message_id)
             filename = await client.download_media(event.message, filename)
-            filename = str(filename)
+            filename = str(filename).split('/')[1]
             msg_logger.info(u'Media {} saved successfully'.format(filename))
     msg_logger.info(u'New message created. Id: {}, content: {}'.format(message_id, message_text))
     try:
