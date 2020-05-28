@@ -1,7 +1,27 @@
 from DB.my_objects import *
 
 
+# Message holder
 class Messages:
+    """
+    This is a class, which is just a list of messages.
+
+    Constructor.
+    We create a list of messages by selecting them all from DB
+    (there is an if-else clause, but we currently never get to else, there is no such code here).
+
+    add. We just append e new message to the list
+
+    modify. We do not ever modify any messages. We create new version. We call msg.modify()
+    (a method of a message-object) to only change version and state (0 - new message, 1 - edited message,
+    2 - deleted message). And we append a new message to our list
+
+    delete. The idea is the same: change version and state and create a new message, with notion, that this message
+    mas deleted. However delete part doesn't work properly.
+
+    static methods here are to obvious to comment
+
+    """
     messages = []
 
     def __init__(self, messages=None):
@@ -66,6 +86,12 @@ class Messages:
 
 
 class Chats:
+    """
+    The idea is pretty much the same as with messages: a simple list, that holds all the chats
+
+    Constructor is a bit tricky, because we have to check the flag if a chat is monitored or not (that's what all those
+    ifs and elses are bout).
+    """
     chats = []
 
     def __init__(self, chats, monitored):

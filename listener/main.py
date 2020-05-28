@@ -6,12 +6,10 @@ import filecmp
 import shutil
 
 
-# TODO rework front (Max)
-# TODO editing configs via UI (with Max)
-
 # Listeners
 @client.on(events.NewMessage(chats=chat_names))
 async def new_message(event):
+    # We get a message, we put it to dict, we parse it.
     message = event.message.to_dict()
     message_text = message['message']
     user_id = str(message['from_id'])
@@ -19,7 +17,10 @@ async def new_message(event):
     message_date = message['date'].strftime("%Y-%m-%d %H:%M:%S")
     chat_id = event.message.chat_id
     filename = None
+
+    # We check, if the message contains media file
     if event.message.media:
+        # We check if it is a poll (polls are terrible).
         if hasattr(event.message.media, 'poll'):
             message_text = message['media']['poll'][
                                'question'] + '\n' + 'SYSTEM: Note, this message will not be updated.'
@@ -30,9 +31,12 @@ async def new_message(event):
             msg_logger.info(u'Media {} saved successfully'.format(filename))
     msg_logger.info(u'New message created. Id: {}, content: {}'.format(message_id, message_text))
     try:
+        # We create a message (this creation automatically creates a corresponding object in database
+        # Note that version and state are hardcoded. They are always 0 for a new message
         msg = Message.create(id=message_id, version=0, user_id=user_id, _modified_at=message_date,
                              _create_at=message_date,
                              chat_id=chat_id, state=0, content=message_text, media=filename)
+        # We call .add method to also add new message to our in-memory message holder
         all_messages.add(msg)
     except PeeweeException:
         db_logger.error(u'Failed to save new message. Id :{}, error:{}'.format(message_id, str(PeeweeException)))
@@ -58,6 +62,8 @@ async def message_edited(event):
             msg_logger.info(u'Media {} saved successfully'.format(filename))
         msg_logger.info(u'Message was edited. Id: {}, content: {}'.format(message_id, message_text))
         try:
+            # Note that version and state are hardcoded. Version is still 0 (it is always 0 for an actual version),
+            # but state is 1. For all versions of edited messages state is 1
             msg = Message.create(id=message_id, version=0, user_id=user_id, _modified_at=message_date,
                                  _create_at=message_date,
                                  chat_id=chat_id, state=1, content=message_text, media=filename)
@@ -67,6 +73,7 @@ async def message_edited(event):
             db.close()
 
 
+# Never mind. Delete sucks.
 @client.on(events.MessageDeleted())
 async def message_deleted(event):
     message_text = ''
@@ -104,10 +111,13 @@ if __name__ == "__main__":
     # Init schema and get messages
     init()
     logging.info(u'Schema inited')
+    # Init all_chats - our chat holder
     all_chats = Chats(chats, chat_names)
     chat_names = Chats.get_monitored()
     logging.info(u'Chats exported to DB')
+    # Init all_messages - our message holder
     all_messages = Messages()
     logging.info(u'All messages inited')
     print("started")
+    # Endless event-loop
     client.run_until_disconnected()

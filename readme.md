@@ -1,6 +1,9 @@
 ## Project setup
 ```
 To run locally:
+pip install -r requirements.txt
+
+or
 
 pip install telethon
 pip install peewee

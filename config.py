@@ -46,7 +46,7 @@ for directory in dirlist:
     if not os.path.exists(dirlist[directory]):
         os.makedirs(dirlist[directory])
 
-# Logs
+# Config loggers
 CONNECTION_LOG_FILENAME = dirlist['logs'] + u'/connect.log'
 MSG_LOG_FILENAME = dirlist['logs'] + u'/msg.log'
 DB_LOG_FILENAME = dirlist['logs'] + u'/db.log'
@@ -83,6 +83,8 @@ else:
     )
     logging.info(u'Connecting via MTProxy')
 
+# This is a code to join channels via API (instead of adding them manually).
+# Also uncomment two last strings in this file
 # Join channels
 # from telethon.sync import TelegramClient, connection, events
 # ls = ['@Burovaia', '@internet_people', '@russianmacro', '@AK47pfl', '@breakingmash', '@banksta', '@trubapodneglinnoy',
@@ -94,6 +96,8 @@ def join(channel):
     client(JoinChannelRequest(channel_entity))
 
 
+# This is a code to connect to Telegram if config.py is run explicitly
+# python config.py
 if __name__ == "__main__":
     client.start(password=password)
     logging.info(u'Connected')
